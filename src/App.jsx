@@ -1,29 +1,29 @@
 import { useEffect, useMemo, useState } from 'react';
 
 const heroRoomData = {
-  nursery: {
-    title: 'Little Lambs Nursery (Ages 0 - 2)',
-    ratio: 'Ratio 1:2',
-    ratioBg: 'bg-rose-100 text-rose-800',
-    desc: 'Peaceful, sanitized environment with loving volunteers who hold, pray over, and care for infants and toddlers.',
-  },
-  preschool: {
-    title: 'Wonder Sprouts Preschool (Ages 3 - 5)',
-    ratio: 'Ratio 1:4',
-    ratioBg: 'bg-amber-100 text-amber-800',
-    desc: 'Energetic storytelling, simple Bible crafts, group puppet shows, and fun songs designed for active little toddlers.',
-  },
-  elementary: {
-    title: 'Faith Explorers (Grades 1st - 3rd)',
+  youngBelievers: {
+    title: 'Young Believers (Grades 3-5)',
     ratio: 'Ratio 1:6',
     ratioBg: 'bg-emerald-100 text-emerald-800',
-    desc: 'Live interactive worship band, object lessons, small table discussions, and fun memory verse competitions!',
+    desc: 'Building strong biblical foundations through interactive worship, creative storytelling, and age-appropriate discussions that help kids discover God\'s amazing love.',
   },
-  preteen: {
-    title: 'Kingdom Champions (Grades 4th - 5th)',
+  trailblazers: {
+    title: 'Trailblazers (Grades 6-9)',
     ratio: 'Ratio 1:8',
     ratioBg: 'bg-purple-100 text-purple-800',
-    desc: 'Pre-teen discussions tackling real life, faith applications, student leadership roles, and community projects.',
+    desc: 'Guiding pre-teens through real-life questions with engaging lessons, authentic small group connections, and meaningful service opportunities that build unshakeable faith.',
+  },
+  impact: {
+    title: 'Impact Crew (Grades 10-13)',
+    ratio: 'Ratio 1:10',
+    ratioBg: 'bg-blue-100 text-blue-800',
+    desc: 'Equipping teens with relevant biblical truth, authentic community, and leadership roles that prepare them to stand firm in their faith.',
+  },
+  legacy: {
+    title: 'Legacy Team (Grades 14-17)',
+    ratio: 'Ratio 1:12',
+    ratioBg: 'bg-indigo-100 text-indigo-800',
+    desc: 'Preparing young adults to own their faith through deep discussions, mentorship relationships, and real-world application of God\'s Word.',
   },
 };
 
@@ -132,7 +132,7 @@ const faqs = [
 ];
 
 function App() {
-  const [heroAge, setHeroAge] = useState('nursery');
+  const [heroAge, setHeroAge] = useState('youngBelievers');
   const [galleryFilter, setGalleryFilter] = useState('all');
   const [activeFaq, setActiveFaq] = useState(1);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -276,15 +276,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 space-y-5 text-center lg:text-left" data-reveal data-reveal-delay="80">
-              <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2">
-                <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-orange-100 via-amber-100 to-rose-100 border border-orange-200/80 text-slate-800 font-extrabold text-xs sm:text-sm tracking-wide shadow-sm flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  <i className="fa-solid fa-face-smile text-amber-500" /> Welcome Families!
-                </span>
-                <span className="px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 font-bold text-xs tracking-wide hidden sm:inline-flex items-center gap-1.5">
-                  <i className="fa-solid fa-shield-halved text-brand-green" /> 100% Verified Care
-                </span>
-              </div>
+
 
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.15] tracking-tight">Where Young Hearts Discover <span className="bg-gradient-to-r from-brand-coral via-rose-500 to-brand-purple bg-clip-text text-transparent underline decoration-brand-yellow decoration-wavy decoration-2">Big Faith!</span></h1>
               <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">A safe, joyful, and vibrant Sunday community where kids grow in love, make lifelong friends, and experience Jesus in ways they will never forget.</p>
@@ -298,11 +290,8 @@ function App() {
                 </a>
               </div>
 
-              <div className="pt-6 border-t border-orange-200/60 grid grid-cols-3 gap-2 sm:gap-4 max-w-md mx-auto lg:mx-0 text-center sm:text-left">
-                <div className="p-2 sm:p-0">
-                  <div className="font-display font-extrabold text-xl sm:text-2xl text-slate-900 flex items-center justify-center sm:justify-start gap-1"><i className="fa-solid fa-shield-check text-brand-green text-base sm:text-lg" /> 100%</div>
-                  <p className="text-[11px] sm:text-xs text-slate-500 font-semibold mt-0.5">Checked Staff</p>
-                </div>
+              <div className="pt-6 border-t border-orange-200/60 grid grid-cols-2 gap-2 sm:gap-4 max-w-md mx-auto lg:mx-0 text-center sm:text-left">
+
                 <div className="p-2 sm:p-0">
                   <div className="font-display font-extrabold text-xl sm:text-2xl text-slate-900 flex items-center justify-center sm:justify-start gap-1"><i className="fa-solid fa-door-open text-brand-purple text-base sm:text-lg" /> 4</div>
                   <p className="text-[11px] sm:text-xs text-slate-500 font-semibold mt-0.5">Custom Rooms</p>
@@ -329,21 +318,21 @@ function App() {
                   <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">Select Your Child's Age:</p>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(heroRoomData).map(([key, value]) => {
-                      const iconMap = {
-                        nursery: 'fa-baby',
-                        preschool: 'fa-seedling',
-                        elementary: 'fa-compass',
-                        preteen: 'fa-mountain',
-                      };
+                       const iconMap = {
+                         youngBelievers: 'fa-compass',
+                         trailblazers: 'fa-fire',
+                         impact: 'fa-bolt',
+                         legacy: 'fa-mountain',
+                       };
                       const cardClass = heroAge === key ? 'hero-age-btn active p-3 rounded-2xl border-2 border-brand-coral bg-rose-50 text-slate-900 font-bold text-xs flex items-center gap-2 shadow-sm transition-all text-left' : 'hero-age-btn p-3 rounded-2xl border-2 border-slate-200/80 bg-white hover:border-amber-300 text-slate-900 font-bold text-xs flex items-center gap-2 transition-all text-left';
                       return (
                         <button key={key} onClick={() => setHeroAge(key)} className={cardClass}>
-                          <div className={`w-8 h-8 rounded-xl ${key === 'nursery' ? 'bg-brand-coral text-white' : key === 'preschool' ? 'bg-amber-100 text-amber-700' : key === 'elementary' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'} flex items-center justify-center font-bold text-sm flex-shrink-0`}>
+                           <div className={`w-8 h-8 rounded-xl ${key === 'youngBelievers' ? 'bg-emerald-100 text-emerald-700' : key === 'trailblazers' ? 'bg-purple-100 text-purple-700' : key === 'impact' ? 'bg-blue-100 text-blue-700' : 'bg-indigo-100 text-indigo-700'} flex items-center justify-center font-bold text-sm flex-shrink-0`}>
                             <i className={`fa-solid ${iconMap[key]}`} />
                           </div>
                           <div>
-                            <div className="font-bold text-slate-900">{key === 'nursery' ? '0 - 2 Yrs' : key === 'preschool' ? '3 - 5 Yrs' : key === 'elementary' ? 'Grades 1-3' : 'Grades 4-5'}</div>
-                            <div className="text-[10px] text-slate-500 font-normal">{key === 'nursery' ? 'Nursery' : key === 'preschool' ? 'Preschool' : key === 'elementary' ? 'Explorers' : 'Champions'}</div>
+                             <div className="font-bold text-slate-900">{key === 'youngBelievers' ? 'Grades 3-5' : key === 'trailblazers' ? 'Grades 6-9' : key === 'impact' ? 'Grades 10-13' : 'Grades 14-17'}</div>
+                             <div className="text-[10px] text-slate-500 font-normal">{key === 'youngBelievers' ? 'Young Believers' : key === 'trailblazers' ? 'Trailblazers' : key === 'impact' ? 'Impact Crew' : 'Legacy Team'}</div>
                           </div>
                         </button>
                       );
@@ -399,10 +388,10 @@ function App() {
 
           <div className="flex flex-wrap justify-center gap-3 mb-10">
             {[
-              { key: 'nursery', label: 'Little Lambs (0 - 2 yrs)', icon: 'fa-baby', active: 'bg-brand-coral text-white border-brand-coral shadow-md' },
-              { key: 'preschool', label: 'Wonder Sprouts (3 - 5 yrs)', icon: 'fa-seedling', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-yellow' },
-              { key: 'elementary', label: 'Faith Explorers (Grades 1-3)', icon: 'fa-compass', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-green' },
-              { key: 'preteen', label: 'Kingdom Champions (Grades 4-5)', icon: 'fa-mountain', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-purple' },
+              { key: 'youngBelievers', label: 'Young Believers (Grades 3-5)', icon: 'fa-compass', active: 'bg-brand-coral text-white border-brand-coral shadow-md' },
+              { key: 'trailblazers', label: 'Trailblazers (Grades 6-9)', icon: 'fa-fire', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-yellow' },
+              { key: 'impact', label: 'Impact Crew (Grades 10-13)', icon: 'fa-bolt', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-green' },
+              { key: 'legacy', label: 'Legacy Team (Grades 14-17)', icon: 'fa-mountain', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-purple' },
             ].map((tab) => (
               <button key={tab.key} onClick={() => setHeroAge(tab.key)} className={`px-6 py-3 rounded-2xl font-bold text-sm sm:text-base border-2 transition-all flex items-center gap-2 ${heroAge === tab.key ? tab.active : 'bg-white text-slate-700 border-slate-200 hover:border-brand-coral'}`}>
                 <i className={`fa-solid ${tab.icon}`} /> {tab.label}
@@ -411,53 +400,50 @@ function App() {
           </div>
 
           <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl transition-all duration-300" data-reveal data-reveal-delay="120">
-            {heroAge === 'nursery' ? (
+            {heroAge === 'youngBelievers' ? (
               <div className="grid lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 text-rose-700 font-bold text-xs"><i className="fa-solid fa-heart" /> Ages 6 Weeks – 24 Months</div>
-                  <h3 className="font-display text-3xl font-bold text-slate-900">Little Lambs Nursery</h3>
-                  <p className="text-slate-600 leading-relaxed">A gentle, peaceful, and ultra-sanitized room filled with loving volunteers who hold, pray over, and play with your little ones. We ensure every baby experiences God's love from their very first steps.</p>
-                  <div className="grid sm:grid-cols-2 gap-4 pt-2">
-                    <div className="p-4 rounded-2xl bg-rose-50/60 border border-rose-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-coral" /> Sensory & Gentle Play</h4><p className="text-xs text-slate-600 mt-1">Soft toys, quiet music, and comfortable rocking chairs.</p></div>
-                    <div className="p-4 rounded-2xl bg-rose-50/60 border border-rose-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-coral" /> Silent Paging System</h4><p className="text-xs text-slate-600 mt-1">Direct SMS/pager updates if your baby needs diaper change or comfort.</p></div>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"God made you, God loves you, and Jesus wants to be your friend forever." — Nursery Core Truth</p></div>
-                </div>
-                <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-rose-200 to-amber-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-rose-200/50"><div className="w-24 h-24 rounded-full bg-white text-brand-coral flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-baby" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Peace of Mind</h4><p className="text-xs text-slate-600 mt-2">1:2 Volunteer-to-Baby ratio ensures your little lamb receives focused care.</p><span className="mt-4 px-4 py-1.5 bg-white rounded-full text-xs font-bold text-brand-coral shadow-sm">Sanitized Before Every Service</span></div></div>
-              </div>
-            ) : heroAge === 'preschool' ? (
-              <div className="grid lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-xs"><i className="fa-solid fa-shapes" /> Ages 3 – 5 Years (Potty Trained)</div>
-                  <h3 className="font-display text-3xl font-bold text-slate-900">Wonder Sprouts Preschool</h3>
-                  <p className="text-slate-600 leading-relaxed">Curiosity blossoms here! Through interactive Bible storytelling, energetic worship dances, creative craft time, and practical friendship lessons, preschoolers learn how big God really is.</p>
-                  <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-amber-600" /> Interactive Story Theater</h4><p className="text-xs text-slate-600 mt-1">Costumes, puppets, and props bring Bible characters to life.</p></div><div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-amber-600" /> Small Group Crafts</h4><p className="text-xs text-slate-600 mt-1">Hands-on memory verse activities to take home each week.</p></div></div>
-                  <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"I am fearfully and wonderfully made by God!" — Psalm 139:14</p></div>
-                </div>
-                <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-amber-200 to-emerald-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-amber-200/50"><div className="w-24 h-24 rounded-full bg-white text-amber-500 flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-seedling" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Growing Faith</h4><p className="text-xs text-slate-600 mt-2">Fun worship songs with physical actions that keep toddlers engaged!</p></div></div>
-              </div>
-            ) : heroAge === 'elementary' ? (
-              <div className="grid lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs"><i className="fa-solid fa-book-bible" /> Grades 1st – 3rd</div>
-                  <h3 className="font-display text-3xl font-bold text-slate-900">Faith Explorers</h3>
-                  <p className="text-slate-600 leading-relaxed">Kids jump into high-energy live worship, engaging stage games, and age-driven small group discussions. We focus on building biblical literacy, prayer habits, and real friendships.</p>
-                  <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-green" /> Live Kids Band Worship</h4><p className="text-xs text-slate-600 mt-1">Interactive worship leading kids into heartfelt praise.</p></div><div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-green" /> Table Leader Mentors</h4><p className="text-xs text-slate-600 mt-1">Consistent small group leaders who pray for and encourage each child.</p></div></div>
-                  <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Your word is a lamp to my feet and a light for my path." — Psalm 119:105</p></div>
+                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs"><i className="fa-solid fa-compass" /> Grades 3-5</div>
+                   <h3 className="font-display text-3xl font-bold text-slate-900">Young Believers</h3>
+                   <p className="text-slate-600 leading-relaxed">Building strong biblical foundations through interactive worship, creative storytelling, and age-appropriate discussions that help kids discover God's amazing love.</p>
+                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-green" /> Bible Exploration</h4><p className="text-xs text-slate-600 mt-1">Interactive lessons and object lessons that bring Scripture to life.</p></div><div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-green" /> Creative Arts & Worship</h4><p className="text-xs text-slate-600 mt-1">High-energy praise songs, memory verse games, and hands-on craft activities.</p></div></div>
+                   <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Let the little children come to me, and do not hinder them, for the kingdom of heaven belongs to such as these." — Matthew 19:14</p></div>
                 </div>
                 <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-emerald-200 to-sky-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-emerald-200/50"><div className="w-24 h-24 rounded-full bg-white text-brand-green flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-compass" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Bible Discovery</h4><p className="text-xs text-slate-600 mt-2">Kids learn how to navigate the Bible and apply God's word at school & home.</p></div></div>
               </div>
-            ) : (
+             ) : heroAge === 'trailblazers' ? (
               <div className="grid lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-purple-800 font-bold text-xs"><i className="fa-solid fa-bolt" /> Grades 4th – 5th</div>
-                  <h3 className="font-display text-3xl font-bold text-slate-900">Kingdom Champions</h3>
-                  <p className="text-slate-600 leading-relaxed">Preparing pre-teens for middle school with strong spiritual foundations! We tackle big questions, foster deeper prayer lives, and empower them to lead through service projects and youth team leadership.</p>
-                  <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-purple" /> Real Life Q&A</h4><p className="text-xs text-slate-600 mt-1">Open, safe discussions about identity, faith, friendship & peer pressure.</p></div><div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-purple" /> Leadership Opportunities</h4><p className="text-xs text-slate-600 mt-1">Pre-teens help with AV tech, welcome greeting, and prayer ministry.</p></div></div>
-                  <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Don't let anyone look down on you because you are young, but set an example." — 1 Timothy 4:12</p></div>
+                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-purple-800 font-bold text-xs"><i className="fa-solid fa-fire" /> Grades 6-9</div>
+                   <h3 className="font-display text-3xl font-bold text-slate-900">Trailblazers</h3>
+                   <p className="text-slate-600 leading-relaxed">Guiding pre-teens through real-life questions with engaging lessons, authentic small group connections, and meaningful service opportunities that build unshakeable faith.</p>
+                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-purple" /> Real Life Q&A</h4><p className="text-xs text-slate-600 mt-1">Open, safe discussions about identity, faith, friendship & peer pressure.</p></div><div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-purple" /> Leadership Opportunities</h4><p className="text-xs text-slate-600 mt-1">Pre-teens help with AV tech, welcome greeting, and prayer ministry.</p></div></div>
+                   <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Don't let anyone look down on you because you are young, but set an example." — 1 Timothy 4:12</p></div>
                 </div>
-                <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-purple-200 to-indigo-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-purple-200/50"><div className="w-24 h-24 rounded-full bg-white text-brand-purple flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-mountain" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Next-Gen Leaders</h4><p className="text-xs text-slate-600 mt-2">Equipping pre-teens with unshakeable confidence in Christ!</p></div></div>
+                <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-purple-200 to-indigo-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-purple-200/50"><div className="w-24 h-24 rounded-full bg-white text-brand-purple flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-fire" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Next-Gen Leaders</h4><p className="text-xs text-slate-600 mt-2">Equipping pre-teens with unshakeable confidence in Christ!</p></div></div>
               </div>
+             ) : heroAge === 'impact' ? (
+              <div className="grid lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-7 space-y-6">
+                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-xs"><i className="fa-solid fa-bolt" /> Grades 10-13</div>
+                   <h3 className="font-display text-3xl font-bold text-slate-900">Impact Crew</h3>
+                   <p className="text-slate-600 leading-relaxed">Equipping teens with relevant biblical truth, authentic community, and leadership roles that prepare them to stand firm in their faith and make a lasting impact.</p>
+                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-blue-600" /> Small Group Discipleship</h4><p className="text-xs text-slate-600 mt-1">Authentic conversations with trained mentors who genuinely care.</p></div><div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-blue-600" /> Service Projects</h4><p className="text-xs text-slate-600 mt-1">Putting faith into action through local outreach and community service.</p></div></div>
+                    <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"For we are God's handiwork, created in Christ Jesus to do good works." — Ephesians 2:10</p></div>
+                 </div>
+                 <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-blue-200 to-sky-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-blue-200/50"><div className="w-24 h-24 rounded-full bg-white text-blue-600 flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-bolt" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Bold Faith</h4><p className="text-xs text-slate-600 mt-2">Standing firm in God's truth and shining bright in a world that needs His light.</p></div></div>
+              </div>
+             ) : (
+               <div className="grid lg:grid-cols-12 gap-8 items-center">
+                 <div className="lg:col-span-7 space-y-6">
+                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xs"><i className="fa-solid fa-mountain" /> Grades 14-17</div>
+                   <h3 className="font-display text-3xl font-bold text-slate-900">Legacy Team</h3>
+                   <p className="text-slate-600 leading-relaxed">Preparing young adults to own their faith through deep discussions, mentorship relationships, and real-world application of God's Word.</p>
+                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-indigo-600" /> Deep Discipleship</h4><p className="text-xs text-slate-600 mt-1">Mentorship with youth leaders who disciple them through high school years.</p></div><div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-indigo-600" /> Real-World Faith</h4><p className="text-xs text-slate-600 mt-1">Practical biblical living for college, career, and calling.</p></div></div>
+                   <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go." — Joshua 1:9</p></div>
+                 </div>
+                 <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-indigo-200 to-purple-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-indigo-200/50"><div className="w-24 h-24 rounded-full bg-white text-indigo-600 flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-mountain" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Unshakeable Faith</h4><p className="text-xs text-slate-600 mt-2">Prepared to lead and live out their faith wherever God calls them.</p></div></div>
+               </div>
             )}
           </div>
         </div>
@@ -671,7 +657,7 @@ function App() {
             ) : modal === 'volunteer' ? (
               <>
                 <div className="text-center mb-6"><div className="w-12 h-12 rounded-2xl bg-purple-100 text-brand-purple flex items-center justify-center font-bold text-xl mx-auto mb-2"><i className="fa-solid fa-hands-holding-child" /></div><h3 className="font-display font-bold text-2xl text-slate-900">Serve in Heartfelt Kids</h3><p className="text-xs text-slate-500 mt-1">Invest in the next generation! Fill out this quick inquiry.</p></div>
-                <form onSubmit={(e) => submitForm(e, 'Thank you! Our kids coordinator will contact you shortly.')} className="space-y-3"><div><label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label><input type="text" required placeholder="Your name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label><input type="email" required placeholder="you@example.com" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Preferred Age Group to Serve</label><select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none"><option>Nursery (0-2 yrs)</option><option>Preschool (3-5 yrs)</option><option>Elementary (Grades 1-3)</option><option>Pre-Teens (Grades 4-5)</option><option>Check-In Host / Greeter</option></select></div><button type="submit" className="w-full py-3 bg-brand-purple hover:bg-purple-700 text-white font-bold rounded-xl transition text-xs uppercase tracking-wider">Submit Volunteer Inquiry</button></form>
+                <form onSubmit={(e) => submitForm(e, 'Thank you! Our kids coordinator will contact you shortly.')} className="space-y-3"><div><label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label><input type="text" required placeholder="Your name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label><input type="email" required placeholder="you@example.com" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Preferred Age Group to Serve</label><select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none"><option>Young Believers (Grades 3-5)</option><option>Trailblazers (Grades 6-9)</option><option>Impact Crew (Grades 10-13)</option><option>Legacy Team (Grades 14-17)</option><option>Check-In Host / Greeter</option></select></div><button type="submit" className="w-full py-3 bg-brand-purple hover:bg-purple-700 text-white font-bold rounded-xl transition text-xs uppercase tracking-wider">Submit Volunteer Inquiry</button></form>
               </>
             ) : (
               <>
