@@ -1,692 +1,1581 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Heart, BookOpen, Music, Palette, Gamepad2, Users, Calendar, Clock,
+  ShieldCheck, ChevronLeft, ChevronRight, Menu, X, CheckCircle, Phone,
+  Mail, MapPin, Sparkles, Star, ArrowRight, Play, Send, Award, Smile,
+  Volume2, VolumeX, Eye, EyeOff, HelpCircle, ChevronDown, ChevronUp, RefreshCw, CheckCircle2
+} from 'lucide-react';
 
-const heroRoomData = {
-  youngBelievers: {
-    title: 'Young Believers (Grades 3-5)',
-    ratio: 'Ratio 1:6',
-    ratioBg: 'bg-emerald-100 text-emerald-800',
-    desc: 'Building strong biblical foundations through interactive worship, creative storytelling, and age-appropriate discussions that help kids discover God\'s amazing love.',
-  },
-  trailblazers: {
-    title: 'Trailblazers (Grades 6-9)',
-    ratio: 'Ratio 1:8',
-    ratioBg: 'bg-purple-100 text-purple-800',
-    desc: 'Guiding pre-teens through real-life questions with engaging lessons, authentic small group connections, and meaningful service opportunities that build unshakeable faith.',
-  },
-  impact: {
-    title: 'Impact Crew (Grades 10-13)',
-    ratio: 'Ratio 1:10',
-    ratioBg: 'bg-blue-100 text-blue-800',
-    desc: 'Equipping teens with relevant biblical truth, authentic community, and leadership roles that prepare them to stand firm in their faith.',
-  },
-  legacy: {
-    title: 'Legacy Team (Grades 14-17)',
-    ratio: 'Ratio 1:12',
-    ratioBg: 'bg-indigo-100 text-indigo-800',
-    desc: 'Preparing young adults to own their faith through deep discussions, mentorship relationships, and real-world application of God\'s Word.',
-  },
-};
+import revivalImg from './images/serving 3.jpg';
+import regaliaImg from './images/revival.jpg';
+import intercessionImg from './images/prayer.jpg';
 
-const galleryCards = [
+const HERO_SLIDES = [
   {
     id: 1,
-    category: 'sports',
-    tag: 'Sports & Rec',
-    title: 'Team Sports & Relay Games',
-    description: 'High-energy outdoor games build friendships and teach encouragement on field days!',
-    location: 'Outdoor Sports Turf',
-    badge: 'Camp Highlight',
-    likes: 42,
-    age: 'Grades 1-5',
-    image: 'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?auto=format&fit=crop&w=800&q=80',
-    fallback: 'https://placehold.co/800x500/FF6B6B/FFFFFF?text=Sports+%26+Relay+Fun',
+    image: revivalImg,
+    title: "Where Faith Grows in Little Hearts",
+    subtitle: "Nurturing the next generation in God's love, wisdom, and joy every Sunday in Harare.",
+    badge: "Welcome to Heartfelt Kids"
   },
   {
     id: 2,
-    category: 'crafts',
-    tag: 'Creative Crafts',
-    title: 'Bible Verse Painting & Sculpture',
-    description: 'Kids express their faith visually with fun painting, clay models, and memory verse take-home crafts.',
-    location: 'Sprouts Room Art Table',
-    badge: 'Weekly Craft',
-    likes: 38,
-    age: 'Ages 3-8',
-    image: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=800&q=80',
-    fallback: 'https://placehold.co/800x500/FFD166/0F172A?text=Creative+Crafts+Spot',
+    image: regaliaImg,
+    title: "Vibrant Praise & Inspired Worship",
+    subtitle: "Dynamic kid-friendly worship sessions where children discover their praise and purpose.",
+    badge: "Sunday Worship Experience"
   },
   {
     id: 3,
-    category: 'worship',
-    tag: 'Praise & Worship',
-    title: 'High-Energy Praise & Motions',
-    description: 'Action-packed praise songs that get kids jumping, singing, and praising God with all their heart!',
-    location: 'Main Kids Stage',
-    badge: 'Sunday Praise',
-    likes: 56,
-    age: 'All Ages',
-    image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
-    fallback: 'https://placehold.co/800x500/06D6A0/FFFFFF?text=Joyful+Praise+Worship',
+    image: intercessionImg,
+    title: "Safe, Creative & Joy-Filled Spaces",
+    subtitle: "Interactive Bible teaching, crafts, and games tailored for every age group.",
+    badge: "Discipleship for Kids"
+  }
+];
+
+const SCHEDULE_DATA = [
+  {
+    id: 'toddlers',
+    age: 'Ages 3-5',
+    title: 'Toddlers Kingdom',
+    time: '9:00 AM - 11:00 AM',
+    room: 'Room 101 - Bright Sparks Wing',
+    image: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&q=80&w=800',
+    description: 'Sensory storytelling, cheerful action songs, nap/play breaks, and foundational Bible lessons.',
+    highlights: ['Action Songs & Rhymes', 'Interactive Puppet Stories', 'Safe Soft-Play Area']
+  },
+  {
+    id: 'juniors',
+    age: 'Ages 6-9',
+    title: 'Juniors Discovery',
+    time: '9:00 AM - 11:00 AM',
+    room: 'Room 104 - Joy Hall',
+    image: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?auto=format&fit=crop&q=80&w=800',
+    description: 'Engaging illustrated scripture study, group craft work, memory verses, and team building games.',
+    highlights: ['Illustrated Bible Lessons', 'Creative Craft Workshops', 'Scripture Memory Challenges']
+  },
+  {
+    id: 'preteens',
+    age: 'Ages 10-12',
+    title: 'Pre-Teen Champions',
+    time: '9:00 AM - 11:00 AM',
+    room: 'Auditorium B - Youth Center',
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800',
+    description: 'Practical faith discussions, leadership building, live modern worship, and peer mentorship.',
+    highlights: ['Peer Discussion Groups', 'Youth Worship Band', 'Community Service Projects']
+  }
+];
+
+const PROGRAM_DATA = [
+  {
+    id: 1,
+    title: '📖 Bible Stories & Dramas',
+    icon: BookOpen,
+    image: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=800',
+    shortDesc: 'Age-appropriate Bible lessons that bring God’s Word to life through drama and visual storytelling.',
+    fullDesc: 'Our curriculum takes children through key biblical narratives using theatrical re-enactments, animated visual aids, and interactive Q&A that help scripture stick for a lifetime.'
+  },
+  {
+    id: 2,
+    title: '🎵 Worship & Praise',
+    icon: Music,
+    image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=800',
+    shortDesc: 'High-energy, kid-centric worship songs with actions that fill little hearts with boundless joy.',
+    fullDesc: 'Led by dedicated youth ministers, our worship service includes live music, percussion play for toddlers, and dance routines that empower children to express their love for God.'
+  },
+  {
+    id: 3,
+    title: '🎨 Hands-on Crafts',
+    icon: Palette,
+    image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=800',
+    shortDesc: 'Creative art projects and craft stations designed to reinforce weekly biblical truths.',
+    fullDesc: 'Every Sunday features a customized art activity. Children create take-home mementos like scripture banners, prayer jars, and theme crafts that keep families connected to the lesson at home.'
   },
   {
     id: 4,
-    category: 'photospot',
-    tag: 'Lobby Photo Spot',
-    title: 'Family Selfie Wall & Props',
-    description: 'Snap your Sunday morning family picture with fun oversized props and colorful backdrops!',
-    location: 'Main Lobby Entrance',
-    badge: 'Sunday Spot',
-    likes: 64,
-    age: 'Families & Guests',
-    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
-    fallback: 'https://placehold.co/800x500/8338EC/FFFFFF?text=Family+Photo+Booth+Spot',
+    title: '⚽ Team Games & Fun',
+    icon: Gamepad2,
+    image: 'https://images.unsplash.com/photo-1576267423445-b2e0074d68a4?auto=format&fit=crop&q=80&w=800',
+    shortDesc: 'Supervised, safe games and physical activities that teach teamwork, patience, and kindness.',
+    fullDesc: 'From outdoor relays on our lawn to indoor teamwork puzzles, game time builds friendships, healthy energy release, and practical Christian sportsmanship values.'
+  }
+];
+
+const FAQ_DATA = [
+  {
+    id: 1,
+    question: "What time should I arrive for Sunday school check-in?",
+    answer: "Our check-in stations open at 8:30 AM before the 9:00 AM service. We recommend arriving 10-15 minutes early so our team can help you check in your child smoothly."
+  },
+  {
+    id: 2,
+    question: "How does the child safety & security check-in work?",
+    answer: "Upon arrival, parents receive a unique matching security claim tag that corresponds to their child's printed name badge. For safety, children are only released to adults holding the matching security tag."
+  },
+  {
+    id: 3,
+    question: "What should I pack for my toddler or preschooler?",
+    answer: "Please bring a labeled bag with a change of clothes, a named water bottle or sippy cup, and any required diapers. Please ensure all personal items are clearly labeled with your child's name."
+  },
+  {
+    id: 4,
+    question: "Are snacks served during the ministry sessions?",
+    answer: "Yes, light, child-friendly snacks and water are served during play breaks. You can specify any food allergies or dietary restrictions in our online registration form or at the check-in desk."
   },
   {
     id: 5,
-    category: 'sports',
-    tag: 'Sports & Rec',
-    title: 'Pre-Teen Sports Tournaments',
-    description: 'Friendly basketball shooting contests, obstacle courses, and gaga ball on Wednesday nights!',
-    location: 'Outdoor Sports Court',
-    badge: 'Mid-Week Clubs',
-    likes: 31,
-    age: 'Grades 4th-5th',
-    image: 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&w=800&q=80',
-    fallback: 'https://placehold.co/800x500/118AB2/FFFFFF?text=Courts+%26+Sports+Games',
-  },
-  {
-    id: 6,
-    category: 'crafts',
-    tag: 'Story Time Spot',
-    title: 'Puppet & Story Theater',
-    description: 'Cozy reading rugs where toddlers hear how Noah, David, and Esther trusted God.',
-    location: 'Preschool Reading Nook',
-    badge: 'Quiet Spot',
-    likes: 49,
-    age: 'Ages 0-5',
-    image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=80',
-    fallback: 'https://placehold.co/800x500/FF6B6B/FFFFFF?text=Story+Time+Spot',
-  },
+    question: "How can I volunteer or join the teaching team?",
+    answer: "We warmly welcome dedicated volunteers! Click on our 'Volunteer' button on this website to fill out a short sign-up form. All volunteers undergo background checks and safety training."
+  }
 ];
 
-const faqs = [
+const EVENTS_DATA = [
   {
     id: 1,
-    question: 'What if my child has severe allergies or medical needs?',
-    answer: 'When you check in, inform our desk team of any food or environmental allergies. Allergy flags are printed in bold, red font directly onto your child’s security sticker. Our classrooms strictly enforce nut-free environments.',
+    title: "Easter Family Praise & Fun Carnival",
+    date: "Saturday, April 11, 2026",
+    time: "10:00 AM - 2:00 PM",
+    location: "Heartfelt Grounds, Harare",
+    image: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=800",
+    description: "An exciting outdoor event featuring live kid praise music, interactive Bible scavenger hunts, face painting, and bouncy castles celebrating Jesus!",
+    tag: "Family Event"
   },
   {
     id: 2,
-    question: 'How do you notify parents if a child needs assistance during service?',
-    answer: 'If your child is upset for more than 10 minutes or needs diapering/restroom assistance beyond team capabilities, we will send an instant SMS text message to the mobile phone number provided at check-in or display your tag code on the main sanctuary screen.',
+    title: "Vacation Bible School (VBS) 2026: Kingdom Explorers",
+    date: "May 18 - 22, 2026",
+    time: "8:30 AM - 12:30 PM Daily",
+    location: "Kids Auditorium Wing",
+    image: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&q=80&w=800",
+    description: "A 5-day adventure filled with action-packed scripture memory games, scientific Bible experiments, arts, crafts, and high-energy drama worship.",
+    tag: "VBS Week"
   },
   {
     id: 3,
-    question: 'What is your wellness / illness policy?',
-    answer: 'To keep all children safe and healthy, kids must be symptom-free (no fever, runny nose with color, persistent cough, or vomiting) for at least 24 hours without medication before attending Heartfelt Kids programs.',
-  },
-  {
-    id: 4,
-    question: 'Can parents stay in the classroom with their children?',
-    answer: 'For security and background-check compliance, adults without cleared background checks are not allowed inside the main classroom areas. First-time parents may accompany their child to the doorway and meet their room team!',
-  },
+    title: "Parent & Child Prayer Breakfast",
+    date: "Saturday, June 13, 2026",
+    time: "9:00 AM - 11:30 AM",
+    location: "Main Fellowship Hall",
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800",
+    description: "A special morning for parents and kids to enjoy delicious breakfast treats, learn simple family prayer habits, and worship together.",
+    tag: "Parent Workshop"
+  }
 ];
 
-function App() {
-  const [heroAge, setHeroAge] = useState('youngBelievers');
-  const [galleryFilter, setGalleryFilter] = useState('all');
-  const [activeFaq, setActiveFaq] = useState(1);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [verseHidden, setVerseHidden] = useState(false);
-  const [toast, setToast] = useState({ visible: false, message: '', icon: 'fa-circle-check' });
-  const [modal, setModal] = useState(null);
-  const [lightbox, setLightbox] = useState(null);
-  const [likedCards, setLikedCards] = useState({});
+export default function App() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState(null);
+  const [activeTab, setActiveTab] = useState('toddlers');
+  const [toastMessage, setToastMessage] = useState('');
 
-  const heroInfo = useMemo(() => heroRoomData[heroAge], [heroAge]);
-  const filteredGallery = useMemo(() => {
-    if (galleryFilter === 'all') return galleryCards;
-    return galleryCards.filter((item) => item.category === galleryFilter);
-  }, [galleryFilter]);
+  const VERSE_FULL = "Trust in the LORD with all your heart and lean not on your own understanding.";
+  const VERSE_REF = "Proverbs 3:5";
+  const verseWords = VERSE_FULL.split(" ");
+
+  const [hiddenIndices, setHiddenIndices] = useState([]);
+  const [hideLevel, setHideLevel] = useState(0);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState('Zephyr');
+
+  const [openFaq, setOpenFaq] = useState(1);
+
+  const [rsvpEvent, setRsvpEvent] = useState(null);
+  const [rsvpForm, setRsvpForm] = useState({ parentName: '', phone: '', kidsCount: 1 });
+
+  const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
+  const [volunteerForm, setVolunteerForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    role: 'Teacher'
+  });
+
+  const [regForm, setRegForm] = useState({
+    parentName: '',
+    email: '',
+    phone: '',
+    childName: '',
+    childAge: '3-5',
+    notes: ''
+  });
+  const [regSuccess, setRegSuccess] = useState(false);
 
   useEffect(() => {
-    if (!toast.visible) return;
-    const timer = window.setTimeout(() => setToast((prev) => ({ ...prev, visible: false })), 3800);
-    return () => window.clearTimeout(timer);
-  }, [toast.visible]);
-
-  useEffect(() => {
-    const revealNodes = Array.from(document.querySelectorAll('[data-reveal]'));
-    if (!revealNodes.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const delay = entry.target.getAttribute('data-reveal-delay') || '0';
-            entry.target.style.transitionDelay = `${delay}ms`;
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
-    );
-
-    revealNodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 6000);
+    return () => clearInterval(timer);
   }, []);
 
-  const showToast = (message, icon = 'fa-circle-check') => {
-    setToast({ visible: true, message, icon });
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 4000);
   };
 
-  const handleLike = (id) => {
-    setLikedCards((prev) => {
-      const isLiked = !!prev[id];
-      return { ...prev, [id]: !isLiked };
-    });
-    showToast('Loved this moment picture! ❤️', 'fa-heart');
-  };
-
-  const toggleVerse = () => {
-    setVerseHidden((prev) => !prev);
-    showToast('Fill in the blanks! Can you remember the missing words?', 'fa-brain');
-  };
-
-  const speakVerse = () => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance('Trust in the LORD with all your heart and lean not on your own understanding. Proverbs 3 verse 5');
-      utterance.rate = 0.9;
-      utterance.pitch = 1.1;
-      window.speechSynthesis.speak(utterance);
-      showToast('Playing audio verse...', 'fa-volume-high');
-    } else {
-      showToast('Audio playback not supported in this browser.', 'fa-triangle-exclamation');
+  const handleHideLevelChange = (level) => {
+    setHideLevel(level);
+    if (level === 0) {
+      setHiddenIndices([]);
+    } else if (level === 1) {
+      const indicesToHide = [1, 4, 7, 10];
+      setHiddenIndices(indicesToHide);
+    } else if (level === 2) {
+      const indicesToHide = [0, 1, 3, 4, 6, 7, 9, 10, 12];
+      setHiddenIndices(indicesToHide);
+    } else if (level === 3) {
+      setHiddenIndices(verseWords.map((_, i) => i));
     }
   };
 
-  const openModal = (name) => setModal(name);
-  const closeModal = () => setModal(null);
-  const openLightbox = (item) => setLightbox(item);
-  const closeLightbox = () => setLightbox(null);
-
-  const submitForm = (event, successMessage) => {
-    event.preventDefault();
-    closeModal();
-    showToast(successMessage, 'fa-circle-check');
+  const toggleWordHide = (idx) => {
+    if (hiddenIndices.includes(idx)) {
+      setHiddenIndices(hiddenIndices.filter(i => i !== idx));
+    } else {
+      setHiddenIndices([...hiddenIndices, idx]);
+    }
   };
 
-  const handleNewsletter = (event) => {
-    event.preventDefault();
-    showToast('Subscribed! You\'ll receive our weekly family update.', 'fa-envelope-circle-check');
+  const pcmToWav = (pcm16, sampleRate) => {
+    const buffer = new ArrayBuffer(44 + pcm16.length * 2);
+    const view = new DataView(buffer);
+
+    const writeString = (v, offset, string) => {
+      for (let i = 0; i < string.length; i++) {
+        v.setUint8(offset + i, string.charCodeAt(i));
+      }
+    };
+
+    writeString(view, 0, 'RIFF');
+    view.setUint32(4, 36 + pcm16.length * 2, true);
+    writeString(view, 8, 'WAVE');
+    writeString(view, 12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    writeString(view, 36, 'data');
+    view.setUint32(40, pcm16.length * 2, true);
+
+    let offset = 44;
+    for (let i = 0; i < pcm16.length; i++, offset += 2) {
+      view.setInt16(offset, pcm16[i], true);
+    }
+
+    return new Blob([buffer], { type: 'audio/wav' });
+  };
+
+  const speakVerse = async () => {
+    if (isSpeaking) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setIsSpeaking(false);
+      return;
+    }
+
+    setIsSpeaking(true);
+    const verseText = `${VERSE_FULL} - ${VERSE_REF}`;
+
+    try {
+      const payload = {
+        contents: [{
+          parts: [{ text: `Recite clearly and cheerfully for children: "${verseText}"` }]
+        }],
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: selectedVoice }
+            }
+          }
+        },
+        model: "gemini-2.5-flash-preview-tts"
+      };
+
+      const apiKey = "";
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      const part = result?.candidates?.[0]?.content?.parts?.[0];
+      const audioData = part?.inlineData?.data;
+      const mimeType = part?.inlineData?.mimeType;
+
+      if (audioData && mimeType && mimeType.startsWith("audio/")) {
+        const rateMatch = mimeType.match(/rate=(\d+)/);
+        const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+
+        const binaryString = atob(audioData);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        const pcm16 = new Int16Array(bytes.buffer);
+        const wavBlob = pcmToWav(pcm16, sampleRate);
+        const audioUrl = URL.createObjectURL(wavBlob);
+
+        const audio = new Audio(audioUrl);
+        audio.onended = () => setIsSpeaking(false);
+        audio.onerror = () => fallbackWebSpeech(verseText);
+        await audio.play();
+      } else {
+        fallbackWebSpeech(verseText);
+      }
+    } catch (err) {
+      fallbackWebSpeech(verseText);
+    }
+  };
+
+  const fallbackWebSpeech = (text) => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      setIsSpeaking(false);
+      showToast("Audio playback isn't supported on this browser.");
+    }
+  };
+
+  const handleRegisterSubmit = (e) => {
+    e.preventDefault();
+    if (!regForm.parentName || !regForm.phone || !regForm.childName) {
+      showToast('Please fill out all required fields.');
+      return;
+    }
+    setRegSuccess(true);
+    showToast('Registration submitted successfully! We look forward to seeing you.');
+  };
+
+  const handleVolunteerSubmit = (e) => {
+    e.preventDefault();
+    if (!volunteerForm.name || !volunteerForm.phone) {
+      showToast('Please enter your contact information.');
+      return;
+    }
+    setIsVolunteerModalOpen(false);
+    showToast(`Thank you ${volunteerForm.name}! Our team will contact you shortly.`);
+    setVolunteerForm({ name: '', email: '', phone: '', role: 'Teacher' });
+  };
+
+  const handleRsvpSubmit = (e) => {
+    e.preventDefault();
+    if (!rsvpForm.parentName || !rsvpForm.phone) {
+      showToast("Please enter your name and phone number.");
+      return;
+    }
+    showToast(`RSVP Confirmed for ${rsvpEvent.title}! See you there.`);
+    setRsvpEvent(null);
+    setRsvpForm({ parentName: '', phone: '', kidsCount: 1 });
+  };
+
+  const scrollToSection = (id) => {
+    setIsMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF9F5] text-slate-800 font-sans antialiased selection:bg-brand-coral selection:text-white">
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-orange-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-coral to-brand-yellow flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-              <i className="fa-solid fa-heart text-2xl animate-pulse" />
-            </div>
-            <div>
-              <span className="font-display font-bold text-2xl text-slate-900 tracking-tight block leading-none">Heartfelt<span className="text-brand-coral">Kids</span></span>
-              <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Children's Ministry</span>
-            </div>
-          </a>
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-red-500 selection:text-white overflow-x-hidden">
 
-          <nav className="hidden md:flex items-center gap-8 font-semibold text-slate-600 text-sm">
-            <a href="#about" className="hover:text-brand-coral transition-colors">Our Heart</a>
-            <a href="#classrooms" className="hover:text-brand-coral transition-colors">Age Groups</a>
-            <a href="#gallery" className="hover:text-brand-coral transition-colors">Photo Spots</a>
-            <a href="#safety" className="hover:text-brand-coral transition-colors">Safety First</a>
-            <a href="#verse-hub" className="hover:text-brand-coral transition-colors">Verse of the Week</a>
-            <a href="#events" className="hover:text-brand-coral transition-colors">Events</a>
-            <a href="#faq" className="hover:text-brand-coral transition-colors">Parent FAQs</a>
-          </nav>
+      {toastMessage && (
+        <div className="fixed top-20 right-4 z-50 bg-slate-900 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-red-500/30 animate-bounce">
+          <Sparkles className="w-5 h-5 text-red-500" />
+          <span className="text-sm font-medium">{toastMessage}</span>
+        </div>
+      )}
 
-          <div className="hidden lg:flex items-center gap-3">
-            <button onClick={() => openModal('volunteer')} className="px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all">Serve With Us</button>
-            <button onClick={() => openModal('preregister')} className="px-5 py-2.5 text-sm font-bold text-white bg-brand-coral hover:bg-red-500 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2 transform hover:-translate-y-0.5"><i className="fa-solid fa-calendar-check" /> Plan Your Visit</button>
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+
+            <div
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
+                <Heart className="w-7 h-7 text-white fill-white" />
+              </div>
+              <div>
+                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 flex items-center gap-1">
+                  HEARTFELT <span className="text-red-600">KIDS</span>
+                </span>
+                <span className="block text-xs sm:text-xs font-semibold text-slate-600 tracking-wider uppercase">
+                  Harare, Zimbabwe
+                </span>
+              </div>
+            </div>
+
+            <nav className="hidden lg:flex items-center space-x-7 font-medium text-slate-700 text-sm">
+              <button onClick={() => scrollToSection('about')} className="hover:text-red-600 transition-colors">About</button>
+              <button onClick={() => scrollToSection('verse')} className="hover:text-red-600 transition-colors">Verse of the Week</button>
+              <button onClick={() => scrollToSection('schedule')} className="hover:text-red-600 transition-colors">Schedule</button>
+              <button onClick={() => scrollToSection('events')} className="hover:text-red-600 transition-colors">Events</button>
+              <button onClick={() => scrollToSection('faq')} className="hover:text-red-600 transition-colors">FAQ</button>
+              <button onClick={() => scrollToSection('volunteer')} className="hover:text-red-600 transition-colors">Volunteer</button>
+              <button
+                onClick={() => scrollToSection('register')}
+                className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full font-semibold shadow-md shadow-red-600/25 hover:shadow-lg hover:shadow-red-600/35 active:scale-95 transition-all"
+              >
+                Register Child
+              </button>
+            </nav>
+
+            <div className="lg:hidden">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
+                aria-label="Toggle Navigation"
+              >
+                {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+              </button>
+            </div>
+
           </div>
-
-          <button onClick={() => setMobileMenuOpen((prev) => !prev)} className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-orange-100/50 focus:outline-none" aria-label="Toggle Menu">
-            <i className={`fa-solid ${mobileMenuOpen ? 'fa-xmark' : 'fa-bars'} text-2xl`} />
-          </button>
         </div>
 
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-b border-orange-100 px-6 py-6 shadow-xl space-y-4">
-            {['about', 'classrooms', 'gallery', 'safety', 'verse-hub', 'events', 'faq'].map((id) => (
-              <a key={id} href={`#${id}`} onClick={() => setMobileMenuOpen(false)} className="block font-medium text-slate-700 hover:text-brand-coral py-2 border-b border-slate-100">{id === 'about' ? 'Our Heart' : id === 'classrooms' ? 'Age Groups' : id === 'gallery' ? 'Photo Spots & Activities' : id === 'safety' ? 'Safety First' : id === 'verse-hub' ? 'Verse of the Week' : id === 'events' ? 'Events' : 'Parent FAQs'}</a>
-            ))}
-            <div className="pt-4 flex flex-col gap-3">
-              <button onClick={() => { openModal('preregister'); setMobileMenuOpen(false); }} className="w-full py-3 font-bold text-center text-white bg-brand-coral rounded-2xl shadow"><i className="fa-solid fa-calendar-check mr-2" /> Plan Your Visit</button>
-              <button onClick={() => { openModal('volunteer'); setMobileMenuOpen(false); }} className="w-full py-3 font-bold text-center text-slate-700 bg-slate-100 rounded-2xl">Serve With Us</button>
-            </div>
+        {isMenuOpen && (
+          <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-2 shadow-xl animate-fadeIn">
+            <button
+              onClick={() => scrollToSection('about')}
+              className="block w-full text-left px-3 py-2 text-slate-700 font-medium hover:bg-red-50 hover:text-red-600 rounded-lg"
+            >
+              About Us
+            </button>
+            <button
+              onClick={() => scrollToSection('verse')}
+              className="block w-full text-left px-3 py-2 text-slate-700 font-medium hover:bg-red-50 hover:text-red-600 rounded-lg"
+            >
+              Verse of the Week
+            </button>
+            <button
+              onClick={() => scrollToSection('schedule')}
+              className="block w-full text-left px-3 py-2 text-slate-700 font-medium hover:bg-red-50 hover:text-red-600 rounded-lg"
+            >
+              Sunday Schedule
+            </button>
+            <button
+              onClick={() => scrollToSection('events')}
+              className="block w-full text-left px-3 py-2 text-slate-700 font-medium hover:bg-red-50 hover:text-red-600 rounded-lg"
+            >
+              Upcoming Events
+            </button>
+            <button
+              onClick={() => scrollToSection('faq')}
+              className="block w-full text-left px-3 py-2 text-slate-700 font-medium hover:bg-red-50 hover:text-red-600 rounded-lg"
+            >
+              FAQ
+            </button>
+            <button
+              onClick={() => scrollToSection('volunteer')}
+              className="block w-full text-left px-3 py-2 text-slate-700 font-medium hover:bg-red-50 hover:text-red-600 rounded-lg"
+            >
+              Volunteer
+            </button>
+            <button
+              onClick={() => scrollToSection('register')}
+              className="w-full mt-2 bg-red-600 text-white font-semibold py-3 rounded-xl text-center shadow-md shadow-red-600/20"
+            >
+              Register Child
+            </button>
           </div>
         )}
       </header>
 
-      <section className="relative overflow-hidden pt-4 pb-12 sm:pb-16 lg:py-20 bubble-bg" data-reveal>
-        <div className="absolute top-12 left-4 sm:left-10 w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-coral to-amber-300 opacity-20 animate-float-slow pointer-events-none flex items-center justify-center text-brand-coral text-xl"><i className="fa-solid fa-heart" /></div>
-        <div className="absolute bottom-10 right-4 sm:right-12 w-14 h-14 rounded-full bg-brand-purple/20 opacity-30 animate-float-reverse pointer-events-none flex items-center justify-center text-brand-purple text-2xl"><i className="fa-solid fa-star" /></div>
-        <div className="absolute top-1/3 right-8 w-10 h-10 rounded-2xl bg-brand-green/20 opacity-25 animate-float-slow pointer-events-none hidden sm:flex items-center justify-center text-brand-green"><i className="fa-solid fa-sparkles" /></div>
+      <section className="relative bg-slate-900 text-white overflow-hidden min-h-[480px] sm:min-h-[580px] lg:min-h-[640px] flex items-center">
+        {HERO_SLIDES.map((slide, idx) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              idx === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            <img
+              src={slide.image}
+              alt={slide.title}
+              className="w-full h-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent" />
+            <div className="absolute inset-0 bg-red-950/20 mix-blend-overlay" />
+          </div>
+        ))}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-7 space-y-5 text-center lg:text-left" data-reveal data-reveal-delay="80">
-
-
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.15] tracking-tight">Where Young Hearts Discover <span className="bg-gradient-to-r from-brand-coral via-rose-500 to-brand-purple bg-clip-text text-transparent underline decoration-brand-yellow decoration-wavy decoration-2">Big Faith!</span></h1>
-              <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">A safe, joyful, and vibrant Sunday community where kids grow in love, make lifelong friends, and experience Jesus in ways they will never forget.</p>
-
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4">
-                <button onClick={() => openModal('preregister')} className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-brand-coral to-rose-500 text-white font-extrabold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:from-red-500 hover:to-rose-600 transition-all transform active:scale-95 sm:hover:-translate-y-0.5 flex items-center justify-center gap-3 text-base sm:text-lg min-h-[52px]">
-                  <i className="fa-solid fa-child-reaching text-xl" /> Plan Your Sunday Visit
-                </button>
-                <a href="#classrooms" className="w-full sm:w-auto px-6 py-4 bg-white/90 backdrop-blur-sm text-slate-800 border-2 border-orange-200/80 font-bold rounded-2xl hover:border-brand-coral hover:text-brand-coral transition-all text-center flex items-center justify-center gap-2 text-sm sm:text-base min-h-[52px]">
-                  <i className="fa-solid fa-shapes text-brand-yellow" /> Explore Age Rooms
-                </a>
-              </div>
-
-              <div className="pt-6 border-t border-orange-200/60 grid grid-cols-2 gap-2 sm:gap-4 max-w-md mx-auto lg:mx-0 text-center sm:text-left">
-
-                <div className="p-2 sm:p-0">
-                  <div className="font-display font-extrabold text-xl sm:text-2xl text-slate-900 flex items-center justify-center sm:justify-start gap-1"><i className="fa-solid fa-door-open text-brand-purple text-base sm:text-lg" /> 4</div>
-                  <p className="text-[11px] sm:text-xs text-slate-500 font-semibold mt-0.5">Custom Rooms</p>
-                </div>
-                <div className="p-2 sm:p-0">
-                  <div className="font-display font-extrabold text-xl sm:text-2xl text-slate-900 flex items-center justify-center sm:justify-start gap-1"><i className="fa-solid fa-clock text-amber-500 text-base sm:text-lg" /> 2</div>
-                  <p className="text-[11px] sm:text-xs text-slate-500 font-semibold mt-0.5">Sunday Services</p>
-                </div>
-              </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 z-10 w-full">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 bg-red-600/90 text-white px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-lg shadow-red-600/30 backdrop-blur-md animate-pulse">
+              <Sparkles className="w-4 h-4" />
+              {HERO_SLIDES[currentSlide].badge}
             </div>
 
-            <div className="lg:col-span-5 relative mt-4 lg:mt-0" data-reveal data-reveal-delay="140">
-              <div className="absolute -inset-2 bg-gradient-to-tr from-brand-yellow via-brand-coral to-brand-purple rounded-4xl blur-xl opacity-35 animate-pulse-glow" />
-              <div className="relative glass-hero-card rounded-3xl p-5 sm:p-7 shadow-2xl border border-white space-y-5">
-                <div className="flex items-center justify-between border-b border-orange-100/80 pb-3.5">
-                  <div>
-                    <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-brand-coral bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100"><i className="fa-solid fa-sparkles mr-1" /> Interactive Quick Tool</span>
-                    <h3 className="font-display font-bold text-xl sm:text-2xl text-slate-900 mt-1.5">Find Your Kid's Room</h3>
-                  </div>
-                  <div className="text-right"><span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-bold text-[11px] rounded-full inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Open Sun</span></div>
-                </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6 leading-tight drop-shadow-md">
+              {HERO_SLIDES[currentSlide].title}
+            </h1>
 
-                <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">Select Your Child's Age:</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {Object.entries(heroRoomData).map(([key, value]) => {
-                       const iconMap = {
-                         youngBelievers: 'fa-compass',
-                         trailblazers: 'fa-fire',
-                         impact: 'fa-bolt',
-                         legacy: 'fa-mountain',
-                       };
-                      const cardClass = heroAge === key ? 'hero-age-btn active p-3 rounded-2xl border-2 border-brand-coral bg-rose-50 text-slate-900 font-bold text-xs flex items-center gap-2 shadow-sm transition-all text-left' : 'hero-age-btn p-3 rounded-2xl border-2 border-slate-200/80 bg-white hover:border-amber-300 text-slate-900 font-bold text-xs flex items-center gap-2 transition-all text-left';
-                      return (
-                        <button key={key} onClick={() => setHeroAge(key)} className={cardClass}>
-                           <div className={`w-8 h-8 rounded-xl ${key === 'youngBelievers' ? 'bg-emerald-100 text-emerald-700' : key === 'trailblazers' ? 'bg-purple-100 text-purple-700' : key === 'impact' ? 'bg-blue-100 text-blue-700' : 'bg-indigo-100 text-indigo-700'} flex items-center justify-center font-bold text-sm flex-shrink-0`}>
-                            <i className={`fa-solid ${iconMap[key]}`} />
-                          </div>
-                          <div>
-                             <div className="font-bold text-slate-900">{key === 'youngBelievers' ? 'Grades 3-5' : key === 'trailblazers' ? 'Grades 6-9' : key === 'impact' ? 'Grades 10-13' : 'Grades 14-17'}</div>
-                             <div className="text-[10px] text-slate-500 font-normal">{key === 'youngBelievers' ? 'Young Believers' : key === 'trailblazers' ? 'Trailblazers' : key === 'impact' ? 'Impact Crew' : 'Legacy Team'}</div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+            <p className="text-lg sm:text-xl text-slate-200 mb-8 leading-relaxed drop-shadow-sm">
+              {HERO_SLIDES[currentSlide].subtitle}
+            </p>
 
-                <div className="p-4 rounded-2xl bg-white/90 border border-orange-100 shadow-sm space-y-2 transition-all">
-                  <div className="flex items-center justify-between">
-                    <span className="font-display font-bold text-slate-900 text-base">{heroInfo.title}</span>
-                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md ${heroInfo.ratioBg}`}>{heroInfo.ratio}</span>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">{heroInfo.desc}</p>
-                </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <button
+                onClick={() => scrollToSection('register')}
+                className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-red-600/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                Register Your Child
+                <ArrowRight className="w-5 h-5" />
+              </button>
 
-                <div className="p-3 rounded-2xl bg-slate-900 text-white flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-xs"><i className="fa-regular fa-clock text-brand-yellow text-sm" /><span><strong>Sunday Service:</strong> 9:00 AM & 11:00 AM</span></div>
-                  <button onClick={() => openModal('preregister')} className="px-3 py-1.5 bg-brand-coral hover:bg-red-500 text-white font-bold text-[11px] rounded-xl transition flex-shrink-0 shadow">Register <i className="fa-solid fa-arrow-right ml-0.5" /></button>
-                </div>
-              </div>
+              <button
+                onClick={() => scrollToSection('verse')}
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md px-8 py-4 rounded-xl font-semibold text-lg hover:border-white transition-all text-center"
+              >
+                Verse of the Week
+              </button>
             </div>
           </div>
         </div>
-      </section>
 
-      <section id="about" className="py-14 sm:py-16 bg-white relative scroll-mt-24" data-reveal>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-brand-coral font-bold text-xs uppercase tracking-widest bg-orange-50 px-4 py-1.5 rounded-full">First Time Visiting?</span>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Simple 4-Step Sunday Experience</h2>
-            <p className="text-slate-600 mt-3 text-base sm:text-lg">We know visiting a new church with kids can feel overwhelming. Here is exactly how we ensure a smooth, joyous morning for your family!</p>
-          </div>
+        <div className="absolute bottom-6 right-6 z-20 flex items-center gap-3">
+          <button
+            onClick={() => setCurrentSlide((prev) => (prev === 0 ? HERO_SLIDES.length - 1 : prev - 1))}
+            className="p-3 rounded-full bg-slate-900/60 border border-white/20 text-white hover:bg-red-600 transition-colors backdrop-blur-md"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 relative">
-            {[{step:'1', title:'Welcome & Check-In', text:'Head to the Heartfelt Kids Check-In Desk in the main lobby. Our greeters will answer any questions and assist you.'}, {step:'2', title:'Secure Name Tags', text:'Your child receives a custom tag with allergies/notes, while you receive a matching security pickup claim code.'}, {step:'3', title:'Classroom Drop-Off', text:'Walk your child to their room, meet their leaders, and head to worship knowing they are safe and loved.'}, {step:'4', title:'Tag Match Pick-Up', text:'After service, show your security badge at the classroom door. No child is released without a tag match.'}].map((item, index) => (
-              <div key={item.step} className="bg-[#FFF9F5] p-6 rounded-3xl border border-orange-100 card-hover-bounce relative" data-reveal data-reveal-delay={index * 80}>
-                <div className={`w-12 h-12 ${index === 0 ? 'bg-brand-coral text-white' : index === 1 ? 'bg-brand-yellow text-slate-900' : index === 2 ? 'bg-brand-green text-white' : 'bg-brand-purple text-white'} rounded-2xl flex items-center justify-center font-display font-bold text-2xl shadow-md mb-4`}>{item.step}</div>
-                <h3 className="font-display font-bold text-xl text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="classrooms" className="py-14 sm:py-24 bg-gradient-to-b from-[#FFF9F5] to-white scroll-mt-24" data-reveal>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-brand-purple font-bold text-xs uppercase tracking-widest bg-purple-50 px-4 py-1.5 rounded-full">Tailored Worship & Teaching</span>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Explore Our Classrooms</h2>
-            <p className="text-slate-600 mt-2 text-base">Select an age group to see what your child will experience every Sunday.</p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3 mb-10">
-            {[
-              { key: 'youngBelievers', label: 'Young Believers (Grades 3-5)', icon: 'fa-compass', active: 'bg-brand-coral text-white border-brand-coral shadow-md' },
-              { key: 'trailblazers', label: 'Trailblazers (Grades 6-9)', icon: 'fa-fire', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-yellow' },
-              { key: 'impact', label: 'Impact Crew (Grades 10-13)', icon: 'fa-bolt', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-green' },
-              { key: 'legacy', label: 'Legacy Team (Grades 14-17)', icon: 'fa-mountain', active: 'bg-white text-slate-700 border-slate-200 hover:border-brand-purple' },
-            ].map((tab) => (
-              <button key={tab.key} onClick={() => setHeroAge(tab.key)} className={`px-6 py-3 rounded-2xl font-bold text-sm sm:text-base border-2 transition-all flex items-center gap-2 ${heroAge === tab.key ? tab.active : 'bg-white text-slate-700 border-slate-200 hover:border-brand-coral'}`}>
-                <i className={`fa-solid ${tab.icon}`} /> {tab.label}
+          <div className="flex items-center gap-2 px-2">
+            {HERO_SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className="min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label={`Go to slide ${i + 1}`}
+              >
+                <span className={`block h-3 rounded-full transition-all ${
+                  i === currentSlide ? 'w-8 bg-red-600' : 'w-3 bg-white/40 hover:bg-white'
+                }`} />
               </button>
             ))}
           </div>
 
-          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl transition-all duration-300" data-reveal data-reveal-delay="120">
-            {heroAge === 'youngBelievers' ? (
-              <div className="grid lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs"><i className="fa-solid fa-compass" /> Grades 3-5</div>
-                   <h3 className="font-display text-3xl font-bold text-slate-900">Young Believers</h3>
-                   <p className="text-slate-600 leading-relaxed">Building strong biblical foundations through interactive worship, creative storytelling, and age-appropriate discussions that help kids discover God's amazing love.</p>
-                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-green" /> Bible Exploration</h4><p className="text-xs text-slate-600 mt-1">Interactive lessons and object lessons that bring Scripture to life.</p></div><div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-green" /> Creative Arts & Worship</h4><p className="text-xs text-slate-600 mt-1">High-energy praise songs, memory verse games, and hands-on craft activities.</p></div></div>
-                   <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Let the little children come to me, and do not hinder them, for the kingdom of heaven belongs to such as these." — Matthew 19:14</p></div>
-                </div>
-                <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-emerald-200 to-sky-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-emerald-200/50"><div className="w-24 h-24 rounded-full bg-white text-brand-green flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-compass" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Bible Discovery</h4><p className="text-xs text-slate-600 mt-2">Kids learn how to navigate the Bible and apply God's word at school & home.</p></div></div>
-              </div>
-             ) : heroAge === 'trailblazers' ? (
-              <div className="grid lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-purple-800 font-bold text-xs"><i className="fa-solid fa-fire" /> Grades 6-9</div>
-                   <h3 className="font-display text-3xl font-bold text-slate-900">Trailblazers</h3>
-                   <p className="text-slate-600 leading-relaxed">Guiding pre-teens through real-life questions with engaging lessons, authentic small group connections, and meaningful service opportunities that build unshakeable faith.</p>
-                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-purple" /> Real Life Q&A</h4><p className="text-xs text-slate-600 mt-1">Open, safe discussions about identity, faith, friendship & peer pressure.</p></div><div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-brand-purple" /> Leadership Opportunities</h4><p className="text-xs text-slate-600 mt-1">Pre-teens help with AV tech, welcome greeting, and prayer ministry.</p></div></div>
-                   <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Don't let anyone look down on you because you are young, but set an example." — 1 Timothy 4:12</p></div>
-                </div>
-                <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-purple-200 to-indigo-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-purple-200/50"><div className="w-24 h-24 rounded-full bg-white text-brand-purple flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-fire" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Next-Gen Leaders</h4><p className="text-xs text-slate-600 mt-2">Equipping pre-teens with unshakeable confidence in Christ!</p></div></div>
-              </div>
-             ) : heroAge === 'impact' ? (
-              <div className="grid lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-xs"><i className="fa-solid fa-bolt" /> Grades 10-13</div>
-                   <h3 className="font-display text-3xl font-bold text-slate-900">Impact Crew</h3>
-                   <p className="text-slate-600 leading-relaxed">Equipping teens with relevant biblical truth, authentic community, and leadership roles that prepare them to stand firm in their faith and make a lasting impact.</p>
-                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-blue-600" /> Small Group Discipleship</h4><p className="text-xs text-slate-600 mt-1">Authentic conversations with trained mentors who genuinely care.</p></div><div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-blue-600" /> Service Projects</h4><p className="text-xs text-slate-600 mt-1">Putting faith into action through local outreach and community service.</p></div></div>
-                    <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"For we are God's handiwork, created in Christ Jesus to do good works." — Ephesians 2:10</p></div>
-                 </div>
-                 <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-blue-200 to-sky-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-blue-200/50"><div className="w-24 h-24 rounded-full bg-white text-blue-600 flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-bolt" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Bold Faith</h4><p className="text-xs text-slate-600 mt-2">Standing firm in God's truth and shining bright in a world that needs His light.</p></div></div>
-              </div>
-             ) : (
-               <div className="grid lg:grid-cols-12 gap-8 items-center">
-                 <div className="lg:col-span-7 space-y-6">
-                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xs"><i className="fa-solid fa-mountain" /> Grades 14-17</div>
-                   <h3 className="font-display text-3xl font-bold text-slate-900">Legacy Team</h3>
-                   <p className="text-slate-600 leading-relaxed">Preparing young adults to own their faith through deep discussions, mentorship relationships, and real-world application of God's Word.</p>
-                   <div className="grid sm:grid-cols-2 gap-4 pt-2"><div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-indigo-600" /> Deep Discipleship</h4><p className="text-xs text-slate-600 mt-1">Mentorship with youth leaders who disciple them through high school years.</p></div><div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-100"><h4 className="font-bold text-slate-900 text-sm flex items-center gap-2"><i className="fa-solid fa-check text-indigo-600" /> Real-World Faith</h4><p className="text-xs text-slate-600 mt-1">Practical biblical living for college, career, and calling.</p></div></div>
-                   <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center gap-4"><i className="fa-solid fa-quote-left text-2xl text-brand-yellow" /><p className="text-xs sm:text-sm italic">"Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go." — Joshua 1:9</p></div>
-                 </div>
-                 <div className="lg:col-span-5 flex justify-center"><div className="relative w-full max-w-md aspect-square bg-gradient-to-tr from-indigo-200 to-purple-100 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-lg border border-indigo-200/50"><div className="w-24 h-24 rounded-full bg-white text-indigo-600 flex items-center justify-center text-5xl shadow-md mb-4"><i className="fa-solid fa-mountain" /></div><h4 className="font-display text-2xl font-bold text-slate-800">Unshakeable Faith</h4><p className="text-xs text-slate-600 mt-2">Prepared to lead and live out their faith wherever God calls them.</p></div></div>
-               </div>
-            )}
-          </div>
+          <button
+            onClick={() => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)}
+            className="p-3 rounded-full bg-slate-900/60 border border-white/20 text-white hover:bg-red-600 transition-colors backdrop-blur-md"
+            aria-label="Next Slide"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </section>
 
-      <section id="safety" className="py-14 sm:py-20 bg-slate-900 text-white relative overflow-hidden scroll-mt-24" data-reveal>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-coral opacity-10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-blue opacity-10 rounded-full blur-3xl" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-5 space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/20 text-teal-300 font-bold text-xs uppercase tracking-wider border border-teal-500/30"><i className="fa-solid fa-shield-heart" /> Safety Uncompromised</div>
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white leading-tight">Your Child’s Safety Is Our Highest Priority</h2>
-              <p className="text-slate-300 leading-relaxed text-sm sm:text-base">We know that you can only enjoy service when you know your children are 100% safe. We enforce rigorous safety policies across every single classroom.</p>
-              <div className="pt-2"><button onClick={() => openModal('preregister')} className="px-6 py-3.5 bg-brand-yellow text-slate-900 font-bold rounded-2xl hover:bg-amber-300 transition shadow flex items-center gap-2 text-sm"><i className="fa-solid fa-lock" /> Experience Secure Sunday Check-In</button></div>
-            </div>
-            <div className="lg:col-span-7 grid sm:grid-cols-2 gap-6">
-              {[{icon:'fa-user-check', title:'Background Screened', text:'Every leader undergoes nationwide criminal background checks and in-person pastoral interviews before serving.'}, {icon:'fa-kit-medical', title:'CPR & First Aid Certified', text:'Key ministry directors and safety team members in every hall are trained in emergency response and CPR.'}, {icon:'fa-key', title:'Secure Tag Matching', text:'Unique computer-generated claim numbers match child to parent. No child leaves without matching tags.'}, {icon:'fa-wheat-awn-circle-exclamation', title:'Allergy Awareness', text:'Special dietary restrictions and medical notes are clearly printed in bold directly onto your child’s tag.'}].map((item, index) => (
-                <div key={item.title} className="p-6 bg-slate-800/80 rounded-3xl border border-slate-700 hover:border-teal-400 transition-colors" data-reveal data-reveal-delay={index * 70}>
-                  <div className="w-12 h-12 rounded-2xl bg-teal-500/20 text-teal-400 flex items-center justify-center text-2xl mb-4"><i className={`fa-solid ${item.icon}`} /></div>
-                  <h3 className="font-display text-lg font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">{item.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="gallery" className="py-14 sm:py-24 bg-white relative scroll-mt-24" data-reveal>
+      <section id="about" className="py-12 sm:py-20 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <span className="text-brand-coral font-bold text-xs uppercase tracking-widest bg-rose-50 px-4 py-1.5 rounded-full"><i className="fa-solid fa-camera mr-1 text-brand-coral" /> Sunday & Activity Picture Spots</span>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Life & Joy at Heartfelt Kids</h2>
-            <p className="text-slate-600 mt-2 text-base">Take a peek into our sports games, creative craft stations, praise sessions, and family photo spots!</p>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
-            {['all', 'sports', 'worship', 'crafts', 'photospot'].map((filter) => (
-              <button key={filter} onClick={() => setGalleryFilter(filter)} className={`px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all ${galleryFilter === filter ? 'bg-slate-900 text-white shadow-md' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}>
-                {filter === 'all' ? '✨ All Moments' : filter === 'sports' ? '⚽ Sports & Rec Games' : filter === 'worship' ? '🎵 Praise & Worship' : filter === 'crafts' ? '🎨 Crafts & Story Time' : '📸 Family Selfie Wall'}
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {filteredGallery.map((card, index) => (
-              <div key={card.id} className="photo-card group bg-[#FFF9F5] rounded-3xl overflow-hidden border border-orange-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col" data-reveal data-reveal-delay={index * 70}>
-                <div className="relative overflow-hidden aspect-video bg-slate-100 cursor-pointer" onClick={() => openLightbox(card)}>
-                  <img src={card.image} onError={(e) => { e.currentTarget.src = card.fallback; }} alt={card.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <span className="absolute top-3 left-3 bg-brand-coral/90 backdrop-blur-md text-white font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider"><i className="fa-solid fa-volleyball mr-1" /> {card.tag}</span>
-                  <div className="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold text-xs gap-1"><i className="fa-solid fa-expand text-lg" /> Expand Picture</div>
-                </div>
-                <div className="p-5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                      <span><i className="fa-solid fa-location-dot text-brand-coral mr-1" /> {card.location}</span>
-                      <span>{card.badge}</span>
-                    </div>
-                    <h3 className="font-display font-bold text-lg text-slate-900 group-hover:text-brand-coral transition-colors">{card.title}</h3>
-                    <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{card.description}</p>
+            <div className="lg:col-span-6 relative">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div className="overflow-hidden rounded-2xl shadow-lg border-2 border-white group">
+                    <img
+                      src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&q=80&w=600"
+                      alt="Teacher with kids"
+                      className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                  <div className="pt-4 mt-4 border-t border-orange-100 flex items-center justify-between">
-                    <button onClick={() => handleLike(card.id)} className={`text-xs font-bold flex items-center gap-1.5 transition ${likedCards[card.id] ? 'text-brand-coral' : 'text-slate-600 hover:text-brand-coral'}`}>
-                      <i className={`${likedCards[card.id] ? 'fa-solid' : 'fa-regular'} fa-heart text-brand-coral ${likedCards[card.id] ? 'animate-bounce' : ''}`} /> <span className="like-count">{card.likes + (likedCards[card.id] ? 1 : 0)}</span> Likes
-                    </button>
-                    <span className="text-[11px] font-semibold text-brand-coral">{card.age}</span>
+                  <div className="overflow-hidden rounded-2xl shadow-lg border-2 border-white group">
+                    <img
+                      src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=600"
+                      alt="Children learning Bible"
+                      className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-6">
+                  <div className="overflow-hidden rounded-2xl shadow-lg border-2 border-white group">
+                    <img
+                      src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=600"
+                      alt="Praise and worship kids"
+                      className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="overflow-hidden rounded-2xl shadow-lg border-2 border-white group">
+                    <img
+                      src="https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?auto=format&fit=crop&q=80&w=600"
+                      alt="Craft time joy"
+                      className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section id="verse-hub" className="py-16 bg-[#FFF9F5] border-t border-b border-orange-100">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-brand-coral to-red-500 rounded-4xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-white/10 rounded-full blur-2xl" />
-            <div className="relative z-10 text-center space-y-6">
-              <span className="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-widest text-white"><i className="fa-solid fa-star text-brand-yellow mr-1" /> Verse of the Week</span>
-              <h2 id="verse-display-text" className="font-display text-2xl sm:text-4xl font-extrabold leading-snug max-w-3xl mx-auto">{verseHidden ? '"Trust in the ______ with all your ______ and lean not on your own _______________"' : '"Trust in the LORD with all your heart and lean not on your own understanding."'}</h2>
-              <p className="text-brand-yellow font-bold text-lg">— Proverbs 3:5</p>
-              <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
-                <button onClick={toggleVerse} className="px-6 py-3 bg-white text-brand-coral font-bold rounded-2xl hover:bg-orange-50 transition shadow-md flex items-center gap-2 text-sm"><i className="fa-solid fa-eye-slash" /> <span>{verseHidden ? 'Show Full Verse' : 'Practice / Hide Words'}</span></button>
-                <button onClick={speakVerse} className="px-6 py-3 bg-black/20 hover:bg-black/30 backdrop-blur-md border border-white/30 text-white font-bold rounded-2xl transition flex items-center gap-2 text-sm"><i className="fa-solid fa-volume-high" /> Listen Verse</button>
-              </div>
-              <div className="mt-8 pt-8 border-t border-white/20 grid sm:grid-cols-2 gap-4 text-left bg-white/10 backdrop-blur-sm p-6 rounded-3xl">
-                <div className="flex items-start gap-3"><div className="w-10 h-10 rounded-xl bg-white text-brand-coral flex items-center justify-center font-bold flex-shrink-0"><i className="fa-solid fa-file-pdf" /></div><div><h4 className="font-bold text-white text-sm">Download Weekly Take-Home Guide</h4><p className="text-xs text-orange-100 mt-1">3 simple dinnertime discussion prompts for parents.</p></div></div>
-                <div className="flex items-center justify-end"><button onClick={() => showToast('Downloading Family Devotional Guide (PDF)...', 'fa-file-arrow-down')} className="w-full sm:w-auto px-5 py-2.5 bg-brand-yellow text-slate-900 font-bold text-xs rounded-xl hover:bg-amber-300 transition shadow"><i className="fa-solid fa-download mr-1" /> Get Parent Guide (PDF)</button></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="events" className="py-16 sm:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <span className="text-brand-green font-bold text-xs uppercase tracking-widest bg-emerald-50 px-4 py-1.5 rounded-full">Fun Beyond Sunday</span>
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Upcoming Family Events</h2>
-            </div>
-            <p className="text-slate-600 text-sm max-w-md">Mark your calendars for our special community gatherings, family nights, and seasonal kids camps!</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
-            {[{badge:'Summer Highlight', date:'July 15 - 18', title:'Kids Adventure VBS Week', body:'A 4-day action-packed evening camp filled with games, crafts, worship, and big Bible adventures for ages 4–11.', time:'6:00 PM – 8:30 PM', button:'RSVP Free'}, {badge:'Family Fun', date:'August 5', title:'Popcorn & Movie Night', body:'Bring blankets and lawn chairs for an outdoor family film screening under the stars with free popcorn!', time:'6:30 PM Lawn', button:'RSVP Free'}, {badge:'Parenting Workshop', date:'Sept 12', title:'Raising Resilient Faith', body:'A practical 2-hour seminar for parents on guiding children through digital culture with Christian grace.', time:'10:00 AM – Noon', button:'Register'}].map((event, index) => (
-              <div key={event.title} className="bg-[#FFF9F5] rounded-3xl p-6 border border-orange-100 shadow-sm card-hover-bounce flex flex-col justify-between" data-reveal data-reveal-delay={index * 80}>
+              <div className="absolute bottom-4 right-4 sm:right-6 sm:bottom-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center font-bold">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
                 <div>
-                  <div className="flex items-center justify-between mb-4"><span className="px-3 py-1 bg-amber-100 text-amber-800 font-bold text-xs rounded-full">{event.badge}</span><span className="text-xs font-semibold text-slate-500"><i className="fa-regular fa-calendar" /> {event.date}</span></div>
-                  <h3 className="font-display text-xl font-bold text-slate-900 mb-2">{event.title}</h3>
-                  <p className="text-slate-600 text-xs leading-relaxed mb-4">{event.body}</p>
+                  <p className="text-xs text-slate-500 font-semibold uppercase">Safety First</p>
+                  <p className="text-sm font-extrabold text-slate-900">Vetted & Loving Staff</p>
                 </div>
-                <div className="pt-4 border-t border-orange-200/50 flex items-center justify-between"><span className="text-xs font-bold text-slate-700"><i className="fa-solid fa-clock text-brand-coral mr-1" /> {event.time}</span><button onClick={() => openModal('rsvp')} className="px-4 py-2 bg-brand-coral text-white font-bold text-xs rounded-xl hover:bg-red-500 transition">{event.button}</button></div>
               </div>
-            ))}
+            </div>
+
+            <div className="lg:col-span-6 space-y-6">
+              <div className="inline-flex items-center gap-2 text-red-600 font-bold uppercase tracking-widest text-xs bg-red-50 px-3.5 py-1.5 rounded-full border border-red-100">
+                <Heart className="w-4 h-4 fill-red-600" />
+                About Our Ministry
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                Building Strong Biblical Foundations with Love, Joy & Excellence
+              </h2>
+
+              <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+                At <strong className="text-slate-900">Heartfelt Children's Ministry</strong> in Harare, Zimbabwe, we believe children are not just the future of the church—they are a vital part of the church today.
+              </p>
+
+              <p className="text-slate-600 leading-relaxed">
+                Our mission is to partner with parents to nurture every child in God's Word through age-customized teaching, inspiring worship, creative crafts, and safe fellowship.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="p-4 bg-white rounded-xl border border-slate-200/80 shadow-sm flex items-start gap-3">
+                  <div className="p-2 bg-red-50 text-red-600 rounded-lg shrink-0">
+                    <CheckCircle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm">Biblical Soundness</h4>
+                    <p className="text-xs text-slate-500">Christ-centered, age-appropriate scripture studies.</p>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white rounded-xl border border-slate-200/80 shadow-sm flex items-start gap-3">
+                  <div className="p-2 bg-red-50 text-red-600 rounded-lg shrink-0">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm">Child Protection</h4>
+                    <p className="text-xs text-slate-500">Strict check-in & check-out safety procedures.</p>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white rounded-xl border border-slate-200/80 shadow-sm flex items-start gap-3">
+                  <div className="p-2 bg-red-50 text-red-600 rounded-lg shrink-0">
+                    <Smile className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm">Joyful Environment</h4>
+                    <p className="text-xs text-slate-500">Games, crafts, and music kids look forward to.</p>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white rounded-xl border border-slate-200/80 shadow-sm flex items-start gap-3">
+                  <div className="p-2 bg-red-50 text-red-600 rounded-lg shrink-0">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm">Dedicated Teachers</h4>
+                    <p className="text-xs text-slate-500">Trained, passionate leaders who care deeply.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </div>
       </section>
 
-      <section id="faq" className="py-14 sm:py-24 bg-[#FFF9F5] border-t border-orange-100 scroll-mt-24" data-reveal>
+      <section id="verse" className="py-12 sm:py-20 bg-gradient-to-b from-amber-50/70 via-white to-slate-50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-12">
-            <div className="lg:col-span-5 space-y-6">
-              <span className="text-brand-coral font-bold text-xs uppercase tracking-widest bg-rose-100 px-4 py-1.5 rounded-full">Parent Testimonials</span>
-              <h2 className="font-display text-3xl font-extrabold text-slate-900">Loved by Kids, Trusted by Parents</h2>
-              <div className="bg-white p-6 sm:p-8 rounded-3xl border border-orange-100 shadow-md space-y-4">
-                <div className="flex text-amber-400 gap-1 text-sm"><i className="fa-solid fa-star" /><i className="fa-solid fa-star" /><i className="fa-solid fa-star" /><i className="fa-solid fa-star" /><i className="fa-solid fa-star" /></div>
-                <p className="text-slate-700 text-sm sm:text-base italic leading-relaxed">"As a first-time parent at church, I was nervous about leaving my 2-year-old. The Heartfelt team made us feel so secure! Now my daughter begs us to go to church every Sunday morning."</p>
-                <div className="flex items-center gap-3 pt-2"><div className="w-10 h-10 rounded-full bg-brand-yellow text-slate-900 font-bold flex items-center justify-center font-display">MS</div><div><h4 className="font-bold text-slate-900 text-sm">Maria S.</h4><p className="text-xs text-slate-500">Mom of 2 (Ages 2 & 6)</p></div></div>
+
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-2 text-amber-700 font-bold uppercase tracking-widest text-xs bg-amber-100 px-3.5 py-1.5 rounded-full border border-amber-200 mb-3 shadow-xs">
+              <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+              Weekly Scripture Memory
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+              Verse of the Week
+            </h2>
+            <p className="text-slate-600 mt-2 text-base">
+              Listen to the verse together or practice memorizing scripture using our interactive <strong className="text-slate-900">Hide Words</strong> challenge!
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl border-2 border-amber-200/80 p-4 sm:p-10 shadow-xl relative overflow-hidden">
+
+            <div className="absolute -top-8 -right-8 w-24 h-24 bg-amber-100/50 rounded-full blur-2xl pointer-events-none sm:-top-12 sm:-right-12 sm:w-40 sm:h-40" />
+            <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-red-100/50 rounded-full blur-2xl pointer-events-none sm:-bottom-12 sm:-left-12 sm:w-40 sm:h-40" />
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={speakVerse}
+                  className={`px-5 py-3 rounded-2xl font-bold text-sm flex items-center gap-2.5 transition-all shadow-md ${
+                    isSpeaking
+                      ? 'bg-red-600 text-white animate-pulse shadow-red-600/30'
+                      : 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/25'
+                  }`}
+                >
+                  {isSpeaking ? (
+                    <>
+                      <VolumeX className="w-5 h-5 animate-spin" />
+                      Stop Listening
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 className="w-5 h-5" />
+                      Listen Verse (Gemini TTS)
+                    </>
+                  )}
+                </button>
+
+                <select
+                  value={selectedVoice}
+                  onChange={(e) => setSelectedVoice(e.target.value)}
+                   className="px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50 text-slate-700 outline-none focus:ring-2 focus:ring-amber-400 min-h-[44px]"
+                >
+                  <option value="Zephyr">Voice: Zephyr (Bright)</option>
+                  <option value="Kore">Voice: Kore (Firm)</option>
+                  <option value="Puck">Voice: Puck (Upbeat)</option>
+                  <option value="Fenrir">Voice: Fenrir (Excitable)</option>
+                </select>
               </div>
-              <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-6 rounded-3xl text-white space-y-3">
-                <h3 className="font-display font-bold text-lg text-brand-yellow">Want to make a difference?</h3>
-                <p className="text-xs text-slate-300">Join our team of passionate volunteers who shape the next generation!</p>
-                <button onClick={() => openModal('volunteer')} className="px-4 py-2 bg-brand-coral hover:bg-red-500 text-white font-bold text-xs rounded-xl transition">Apply to Serve <i className="fa-solid fa-arrow-right ml-1" /></button>
+
+              <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+                <span className="text-xs sm:text-xs font-bold text-slate-500 px-1.5 sm:px-2 flex items-center gap-1">
+                  <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Practice:
+                </span>
+                {[
+                  { level: 0, label: 'All', labelSm: 'All Shown' },
+                  { level: 1, label: 'Easy', labelSm: 'Easy (30%)' },
+                  { level: 2, label: 'Hard', labelSm: 'Hard (60%)' },
+                  { level: 3, label: 'Hide', labelSm: 'Hide All' }
+                ].map((btn) => (
+                  <button
+                    key={btn.level}
+                    onClick={() => handleHideLevelChange(btn.level)}
+                    className={`px-2 sm:px-3 py-2 rounded-lg sm:rounded-xl text-xs sm:text-xs font-extrabold transition-all min-h-[44px] min-w-[44px] flex items-center ${
+                      hideLevel === btn.level
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <span className="sm:hidden">{btn.label}</span>
+                    <span className="hidden sm:inline">{btn.labelSm}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="lg:col-span-7 space-y-4">
-              <h3 className="font-display text-2xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h3>
-              {faqs.map((faq) => (
-                <div key={faq.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm" data-reveal data-reveal-delay={faq.id * 70}>
-                  <button onClick={() => setActiveFaq(activeFaq === faq.id ? 0 : faq.id)} className="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center hover:bg-slate-50">
-                    <span>{faq.question}</span>
-                    <i className={`fa-solid fa-chevron-down text-brand-coral transition-transform ${activeFaq === faq.id ? 'rotate-180' : ''}`} />
-                  </button>
-                  {activeFaq === faq.id && <div className="px-6 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">{faq.answer}</div>}
-                </div>
+            <div className="py-8 text-center space-y-6">
+
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-relaxed text-slate-800">
+                <span className="text-red-500 select-none">\u201c</span>
+                {verseWords.map((word, idx) => {
+                  const isHidden = hiddenIndices.includes(idx);
+                  return (
+                    <span
+                      key={idx}
+                      onClick={() => toggleWordHide(idx)}
+                      title="Click to show/hide word"
+                      className={`cursor-pointer px-2 py-1 rounded-xl transition-all duration-300 select-none ${
+                        isHidden
+                          ? 'bg-amber-100 text-amber-800 border-2 border-dashed border-amber-300 min-w-[70px] inline-block font-mono text-center opacity-80 hover:opacity-100'
+                          : 'hover:bg-amber-50 hover:text-amber-700'
+                      }`}
+                    >
+                      {isHidden ? "???" : word}
+                    </span>
+                  );
+                })}
+                <span className="text-red-500 select-none">\u201d</span>
+              </div>
+
+              <div className="inline-block bg-gradient-to-r from-red-600 to-amber-600 text-white font-black text-lg sm:text-xl px-6 py-2 rounded-full shadow-md tracking-wide">
+                — {VERSE_REF}
+              </div>
+
+            </div>
+
+            <div className="bg-amber-50/80 rounded-2xl p-4 border border-amber-200/60 flex items-center justify-between gap-4 text-xs sm:text-sm text-amber-900 font-medium">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
+                <span>Tip: Click on any hidden <code className="bg-amber-200/80 px-1.5 py-0.5 rounded font-mono font-bold">???</code> word above to reveal it or hide it again!</span>
+              </div>
+              <button
+                onClick={() => handleHideLevelChange(0)}
+                className="text-amber-800 font-extrabold underline hover:text-amber-950 shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg min-h-[44px]"
+              >
+                <RefreshCw className="w-3.5 h-3.5" /> Reset
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <section id="schedule" className="py-12 sm:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-red-600 font-bold uppercase tracking-widest text-xs bg-red-50 px-3.5 py-1.5 rounded-full border border-red-100 mb-3">
+              <Calendar className="w-4 h-4" />
+              Weekly Gatherings
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              Sunday Schedule & Classes
+            </h2>
+            <p className="text-slate-600 mt-2">
+              Every Sunday from <strong className="text-slate-900">9:00 AM to 11:00 AM</strong>. Classes are tailored specifically for your child's age group.
+            </p>
+          </div>
+
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex p-1.5 bg-slate-100 rounded-2xl border border-slate-200">
+              {SCHEDULE_DATA.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] flex items-center justify-center sm:px-5 sm:py-2.5 sm:text-sm ${
+                    activeTab === item.id
+                      ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {item.age}
+                </button>
               ))}
             </div>
           </div>
+
+          {SCHEDULE_DATA.filter(item => item.id === activeTab).map((item) => (
+            <div key={item.id} className="bg-slate-50 rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm transition-all animate-fadeIn">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+                <div className="lg:col-span-5 relative overflow-hidden rounded-2xl h-64 sm:h-80 shadow-md">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                    {item.age}
+                  </div>
+                </div>
+
+                <div className="lg:col-span-7 space-y-6">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-red-600 mb-2">
+                      <span className="flex items-center gap-1 bg-red-100/80 px-2.5 py-1 rounded-md">
+                        <Clock className="w-3.5 h-3.5" /> {item.time}
+                      </span>
+                      <span className="flex items-center gap-1 bg-slate-200/80 text-slate-700 px-2.5 py-1 rounded-md">
+                        <MapPin className="w-3.5 h-3.5" /> {item.room}
+                      </span>
+                    </div>
+
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                      {item.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-slate-600 text-base leading-relaxed">
+                    {item.description}
+                  </p>
+
+                  <div className="space-y-2">
+                    <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">Class Highlights</p>
+                    <div className="flex flex-wrap gap-2">
+                      {item.highlights.map((h, i) => (
+                        <span key={i} className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white border border-slate-200 text-slate-800 px-3 py-1.5 rounded-lg shadow-2xs">
+                          <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      onClick={() => scrollToSection('register')}
+                      className="bg-slate-900 hover:bg-red-600 text-white text-sm font-bold px-6 py-3 rounded-xl transition-colors shadow-md flex items-center gap-2"
+                    >
+                      Enroll in {item.title}
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          ))}
+
         </div>
       </section>
 
-      <footer className="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
+      <section id="events" className="py-12 sm:py-20 bg-slate-50 relative border-t border-slate-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-coral to-brand-yellow flex items-center justify-center text-white"><i className="fa-solid fa-heart text-xl" /></div><span className="font-display font-bold text-2xl text-white">Heartfelt<span className="text-brand-coral">Kids</span></span></div>
-              <p className="text-xs text-slate-400 leading-relaxed">Loving God, loving kids, and serving families every week. Building a faith foundation that lasts a lifetime.</p>
-              <div className="flex gap-3 text-slate-400"><a href="#" className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-brand-coral hover:text-white transition"><i className="fa-brands fa-facebook-f text-xs" /></a><a href="#" className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-brand-coral hover:text-white transition"><i className="fa-brands fa-instagram text-xs" /></a><a href="#" className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-brand-coral hover:text-white transition"><i className="fa-brands fa-youtube text-xs" /></a></div>
+
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-red-600 font-bold uppercase tracking-widest text-xs bg-red-100 px-3.5 py-1.5 rounded-full border border-red-200 mb-3">
+              <Calendar className="w-4 h-4" />
+              Community & Fellowship
             </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              Upcoming Family Events
+            </h2>
+            <p className="text-slate-600 mt-2">
+              Mark your calendars! Join us for special children and family events throughout the year in Harare.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {EVENTS_DATA.map((evt) => (
+              <div
+                key={evt.id}
+                className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group"
+              >
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={evt.image}
+                    alt={evt.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
+                    {evt.tag}
+                  </div>
+                </div>
+
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-red-600">
+                      <span className="flex items-center gap-1 bg-red-50 px-2.5 py-1 rounded-md border border-red-100">
+                        <Calendar className="w-3.5 h-3.5" /> {evt.date}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-slate-900 group-hover:text-red-600 transition-colors">
+                      {evt.title}
+                    </h3>
+
+                    <div className="space-y-1 text-xs text-slate-500 font-medium">
+                      <p className="flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-slate-400" /> {evt.time}
+                      </p>
+                      <p className="flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400" /> {evt.location}
+                      </p>
+                    </div>
+
+                    <p className="text-slate-600 text-sm leading-relaxed pt-1">
+                      {evt.description}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setRsvpEvent(evt)}
+                    className="w-full bg-slate-900 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 text-sm"
+                  >
+                    RSVP / Reserve Spot
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {rsvpEvent && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-fadeIn text-slate-900">
+            <button
+              onClick={() => setRsvpEvent(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="inline-block bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full mb-3">
+              RSVP Confirmation
+            </div>
+
+            <h3 className="text-2xl font-black text-slate-900 mb-1">
+              {rsvpEvent.title}
+            </h3>
+            <p className="text-xs text-slate-500 mb-6 flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5" /> {rsvpEvent.date} • {rsvpEvent.time}
+            </p>
+
+            <form onSubmit={handleRsvpSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Parent Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Samuel Mutasa"
+                  value={rsvpForm.parentName}
+                  onChange={(e) => setRsvpForm({...rsvpForm, parentName: e.target.value})}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Phone Number *</label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="+263 77 123 4567"
+                  value={rsvpForm.phone}
+                  onChange={(e) => setRsvpForm({...rsvpForm, phone: e.target.value})}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Number of Children Attending</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={rsvpForm.kidsCount}
+                  onChange={(e) => setRsvpForm({...rsvpForm, kidsCount: e.target.value})}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md transition-colors text-sm"
+              >
+                Confirm RSVP
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <section id="programs" className="py-12 sm:py-20 bg-slate-900 text-white relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 text-red-400 font-bold uppercase tracking-widest text-xs bg-red-950/60 px-3.5 py-1.5 rounded-full border border-red-800/40 mb-3">
+              <Sparkles className="w-4 h-4" />
+              What We Offer
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              Our Core Programs & Activities
+            </h2>
+            <p className="text-slate-400 mt-2">
+              Every Sunday session combines learning, creative expression, and active play.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {PROGRAM_DATA.map((prog) => {
+              const IconComp = prog.icon;
+              return (
+                <div
+                  key={prog.id}
+                  className="bg-slate-800/80 rounded-2xl border border-slate-700/80 overflow-hidden hover:border-red-500/50 transition-all duration-300 flex flex-col group hover:-translate-y-1 shadow-lg"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={prog.image}
+                      alt={prog.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                    <div className="absolute top-3 right-3 bg-red-600 p-2.5 rounded-xl shadow-md">
+                      <IconComp className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">
+                        {prog.title}
+                      </h3>
+                      <p className="text-slate-300 text-sm leading-relaxed mb-4">
+                        {prog.shortDesc}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setSelectedProgram(prog)}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 hover:text-red-300 uppercase tracking-wider group-hover:underline px-2 py-1 rounded-lg min-h-[44px] min-w-[44px]"
+                    >
+                      Read Details
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+
+      {selectedProgram && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 animate-fadeIn text-slate-900">
+            <div className="relative h-56">
+              <img
+                src={selectedProgram.image}
+                alt={selectedProgram.title}
+                className="w-full h-full object-cover"
+              />
+              <button
+                onClick={() => setSelectedProgram(null)}
+                className="absolute top-4 right-4 bg-slate-900/70 hover:bg-slate-900 text-white p-2 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <h3 className="text-2xl font-black text-slate-900">
+                {selectedProgram.title}
+              </h3>
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {selectedProgram.fullDesc}
+              </p>
+
+              <div className="pt-4 border-t border-slate-100 flex justify-end">
+                <button
+                  onClick={() => setSelectedProgram(null)}
+                  className="bg-red-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-red-700 transition-colors"
+                >
+                  Close Window
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <section id="faq" className="py-12 sm:py-20 bg-white relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 text-red-600 font-bold uppercase tracking-widest text-xs bg-red-50 px-3.5 py-1.5 rounded-full border border-red-100 mb-3">
+              <HelpCircle className="w-4 h-4" />
+              Parent Guidance
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-slate-600 mt-2">
+              Have questions before visiting on Sunday? Find key answers regarding check-in, safety, and preparations below.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {FAQ_DATA.map((faq) => {
+              const isOpen = openFaq === faq.id;
+              return (
+                <div
+                  key={faq.id}
+                  className="border border-slate-200 rounded-2xl overflow-hidden transition-all duration-200 bg-slate-50/50 hover:bg-slate-50"
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : faq.id)}
+                    className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 font-bold text-slate-900 text-base sm:text-lg focus:outline-none"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-sm font-black shrink-0">
+                        Q{faq.id}
+                      </span>
+                      {faq.question}
+                    </span>
+                    {isOpen ? (
+                      <ChevronUp className="w-5 h-5 text-red-600 shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
+                    )}
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-6 pb-6 pt-2 text-slate-600 text-sm sm:text-base leading-relaxed border-t border-slate-200/60 bg-white">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+
+      <section id="volunteer" className="py-12 sm:py-20 bg-slate-50 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-red-600 via-red-700 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+              <div className="lg:col-span-7 space-y-6">
+                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                  <Award className="w-4 h-4 text-white" />
+                  Join Our Ministry Family
+                </div>
+
+                <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+                  Make a Lasting Impact in a Child's Life
+                </h2>
+
+                <p className="text-red-100 text-base sm:text-lg leading-relaxed max-w-xl">
+                  We are looking for passionate teachers, joyful helpers, worship leaders, and security volunteers to serve our children in Harare. Full training & background screening provided.
+                </p>
+
+                <div className="flex flex-wrap gap-4 pt-2">
+                  <button
+                    onClick={() => setIsVolunteerModalOpen(true)}
+                    className="bg-white text-red-700 hover:bg-slate-100 px-8 py-4 rounded-xl font-bold text-base shadow-xl hover:scale-105 active:scale-95 transition-all"
+                  >
+                    Become a Volunteer
+                  </button>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 relative">
+                <div className="rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=800"
+                    alt="Volunteers teaching children"
+                    className="w-full h-72 object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {isVolunteerModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-fadeIn text-slate-900">
+            <button
+              onClick={() => setIsVolunteerModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <h3 className="text-2xl font-black text-slate-900 mb-1">
+              Volunteer Sign-Up
+            </h3>
+            <p className="text-slate-500 text-sm mb-6">
+              Fill in your details to join our Heartfelt Kids team.
+            </p>
+
+            <form onSubmit={handleVolunteerSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Grace Moyo"
+                  value={volunteerForm.name}
+                  onChange={(e) => setVolunteerForm({...volunteerForm, name: e.target.value})}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Phone Number *</label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="+263 77 000 0000"
+                  value={volunteerForm.phone}
+                  onChange={(e) => setVolunteerForm({...volunteerForm, phone: e.target.value})}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Preferred Role</label>
+                <select
+                  value={volunteerForm.role}
+                  onChange={(e) => setVolunteerForm({...volunteerForm, role: e.target.value})}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
+                >
+                  <option value="Teacher">Bible Teacher</option>
+                  <option value="Assistant">Classroom Assistant</option>
+                  <option value="Worship">Praise & Worship Leader</option>
+                  <option value="Safety">Safety & Check-in Desk</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md transition-colors"
+              >
+                Submit Application
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <section id="register" className="py-12 sm:py-20 bg-white relative border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+            <div className="lg:col-span-5 space-y-6">
+              <div className="inline-flex items-center gap-2 text-red-600 font-bold uppercase tracking-widest text-xs bg-red-50 px-3.5 py-1.5 rounded-full border border-red-100">
+                <Heart className="w-4 h-4 fill-red-600" />
+                Pre-Register Online
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                Parent Registration Form
+              </h2>
+
+              <p className="text-slate-600 leading-relaxed">
+                Save time on Sunday morning! Register your children online in advance so our check-in team can print your child's safety badge right away.
+              </p>
+
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold shrink-0">
+                    1
+                  </div>
+                  <p className="text-sm font-semibold text-slate-800">Fast & Secure Sunday Morning Check-In</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold shrink-0">
+                    2
+                  </div>
+                  <p className="text-sm font-semibold text-slate-800">Special Medical/Allergy Tagging Options</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold shrink-0">
+                    3
+                  </div>
+                  <p className="text-sm font-semibold text-slate-800">Instant Updates for Ministry Activities</p>
+                </div>
+              </div>
+
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-center gap-4">
+                <MapPin className="w-8 h-8 text-red-600 shrink-0" />
+                <div>
+                  <p className="font-extrabold text-slate-900 text-sm">Heartfelt Children's Ministry</p>
+                  <p className="text-xs text-slate-500">Main Campus, Harare, Zimbabwe</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7">
+              <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-xl relative">
+
+                {regSuccess ? (
+                  <div className="text-center py-12 space-y-4">
+                    <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                      <CheckCircle className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-2xl font-black text-slate-900">Child Registered Successfully!</h3>
+                    <p className="text-slate-600 max-w-md mx-auto text-sm">
+                      We have received the registration for <strong>{regForm.childName}</strong>. Please see our team at the Welcome Desk this Sunday!
+                    </p>
+                    <button
+                      onClick={() => {
+                        setRegSuccess(false);
+                        setRegForm({ parentName: '', email: '', phone: '', childName: '', childAge: '3-5', notes: '' });
+                      }}
+                      className="mt-4 bg-slate-900 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-red-600 transition-colors"
+                    >
+                      Register Another Child
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleRegisterSubmit} className="space-y-5">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-extrabold uppercase text-slate-600 mb-1">Parent/Guardian Name *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Tendai Mbare"
+                          value={regForm.parentName}
+                          onChange={(e) => setRegForm({...regForm, parentName: e.target.value})}
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 outline-none text-slate-900 text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-extrabold uppercase text-slate-600 mb-1">Phone Number *</label>
+                        <input
+                          type="tel"
+                          required
+                          placeholder="+263 77 123 4567"
+                          value={regForm.phone}
+                          onChange={(e) => setRegForm({...regForm, phone: e.target.value})}
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 outline-none text-slate-900 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-extrabold uppercase text-slate-600 mb-1">Email Address</label>
+                      <input
+                        type="email"
+                        placeholder="parent@example.com"
+                        value={regForm.email}
+                        onChange={(e) => setRegForm({...regForm, email: e.target.value})}
+                        className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 outline-none text-slate-900 text-sm"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-extrabold uppercase text-slate-600 mb-1">Child's Name *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Anesu Mbare"
+                          value={regForm.childName}
+                          onChange={(e) => setRegForm({...regForm, childName: e.target.value})}
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 outline-none text-slate-900 text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-extrabold uppercase text-slate-600 mb-1">Child's Age Group</label>
+                        <select
+                          value={regForm.childAge}
+                          onChange={(e) => setRegForm({...regForm, childAge: e.target.value})}
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 outline-none text-slate-900 text-sm"
+                        >
+                          <option value="3-5">Toddlers (Ages 3-5)</option>
+                          <option value="6-9">Juniors (Ages 6-9)</option>
+                          <option value="10-12">Pre-Teens (Ages 10-12)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-extrabold uppercase text-slate-600 mb-1">Special Notes / Allergies</label>
+                      <textarea
+                        rows="3"
+                        placeholder="Any allergies, special needs or requests..."
+                        value={regForm.notes}
+                        onChange={(e) => setRegForm({...regForm, notes: e.target.value})}
+                        className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 outline-none text-slate-900 text-sm resize-none"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-xl shadow-xl shadow-red-600/30 hover:scale-[1.01] active:scale-95 transition-all text-base flex items-center justify-center gap-2"
+                    >
+                      <Send className="w-5 h-5" />
+                      Sign Up & Pre-Register Child
+                    </button>
+
+                  </form>
+                )}
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <footer className="bg-slate-950 text-white pt-10 pb-8 sm:pt-16 sm:pb-12 border-t border-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 sm:pb-12 border-b border-slate-800">
+
+            <div className="space-y-4 md:col-span-1">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center">
+                  <Heart className="w-5 h-5 text-white fill-white" />
+                </div>
+                <span className="font-black text-lg tracking-tight">HEARTFELT KIDS</span>
+              </div>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                Where faith grows in little hearts through biblical sound doctrine, warm community, and creative joy.
+              </p>
+            </div>
+
             <div>
-              <h4 className="font-display font-bold text-white text-base mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-xs">
-                <li><a href="#about" className="hover:text-brand-yellow transition">First-Time Visitors</a></li>
-                <li><a href="#classrooms" className="hover:text-brand-yellow transition">Classrooms & Ages</a></li>
-                <li><a href="#safety" className="hover:text-brand-yellow transition">Safety Protocols</a></li>
-                <li><a href="#verse-hub" className="hover:text-brand-yellow transition">Weekly Verses</a></li>
-                <li><a href="#events" className="hover:text-brand-yellow transition">Kids Events</a></li>
+              <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><button onClick={() => scrollToSection('about')} className="hover:text-red-400 px-2 py-1 rounded min-h-[44px] flex items-center">About Us</button></li>
+                <li><button onClick={() => scrollToSection('verse')} className="hover:text-red-400 px-2 py-1 rounded min-h-[44px] flex items-center">Verse of the Week</button></li>
+                <li><button onClick={() => scrollToSection('schedule')} className="hover:text-red-400 px-2 py-1 rounded min-h-[44px] flex items-center">Sunday Classes</button></li>
+                <li><button onClick={() => scrollToSection('events')} className="hover:text-red-400 px-2 py-1 rounded min-h-[44px] flex items-center">Upcoming Events</button></li>
+                <li><button onClick={() => scrollToSection('faq')} className="hover:text-red-400 px-2 py-1 rounded min-h-[44px] flex items-center">Frequently Asked Questions</button></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="font-display font-bold text-white text-base mb-4">Gathering Times</h4>
-              <p className="text-xs text-slate-400 mb-2"><strong className="text-slate-200">Sundays:</strong> 9:00 AM & 11:00 AM</p>
-              <p className="text-xs text-slate-400 mb-2"><strong className="text-slate-200">Wednesdays:</strong> 6:30 PM Clubs</p>
-              <p className="text-xs text-slate-400 mt-4"><i className="fa-solid fa-envelope mr-1 text-brand-coral" /> kids@heartfeltchurch.org</p>
-              <p className="text-xs text-slate-400"><i className="fa-solid fa-phone mr-1 text-brand-coral" /> (555) 839-5437</p>
+              <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Service Schedule</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li className="font-semibold text-white">Every Sunday Morning</li>
+                <li>9:00 AM - 11:00 AM</li>
+                <li className="pt-2 text-xs text-slate-500">Check-in opens at 8:30 AM</li>
+              </ul>
             </div>
+
             <div>
-              <h4 className="font-display font-bold text-white text-base mb-4">Parent Newsletter</h4>
-              <p className="text-xs text-slate-400 mb-3">Get weekly Bible discussion cards & event alerts straight to your inbox.</p>
-              <form onSubmit={handleNewsletter} className="space-y-2">
-                <input type="email" required placeholder="Parent email address..." className="w-full px-3 py-2 bg-slate-800 text-white rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-coral border border-slate-700" />
-                <button type="submit" className="w-full py-2 bg-brand-coral hover:bg-red-500 text-white font-bold text-xs rounded-xl transition">Subscribe Family Update</button>
-              </form>
+              <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Contact Info</h4>
+              <ul className="space-y-3 text-sm text-slate-400">
+                <li className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-red-500 shrink-0" />
+                  Harare, Zimbabwe
+                </li>
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-red-500 shrink-0" />
+                  +263 77 000 0000
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-red-500 shrink-0" />
+                  kids@heartfeltministry.org
+                </li>
+              </ul>
             </div>
+
           </div>
-          <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-            <p>&copy; 2026 Heartfelt Children's Ministry. All rights reserved.</p>
-            <div className="flex gap-4 mt-4 sm:mt-0"><a href="#" className="hover:underline">Privacy Policy</a><a href="#" className="hover:underline">Terms of Safety</a><a href="#" className="hover:underline">Check-In Login</a></div>
+
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+            <p>© 2026 Heartfelt Children's Ministry | Harare, Zimbabwe. All Rights Reserved.</p>
+            <p className="flex items-center gap-1">
+              Built with <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> for Heartfelt Kids
+            </p>
           </div>
         </div>
       </footer>
 
-      {modal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className={`bg-white rounded-3xl shadow-2xl relative overflow-y-auto ${modal === 'preregister' ? 'w-full max-w-xl p-6 sm:p-8 max-h-[90vh]' : modal === 'volunteer' ? 'w-full max-w-md p-6' : 'w-full max-w-sm p-6 text-center'}`}>
-            <button onClick={closeModal} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold"><i className="fa-solid fa-xmark" /></button>
-            {modal === 'preregister' ? (
-              <>
-                <div className="flex items-center gap-3 mb-4"><div className="w-10 h-10 rounded-2xl bg-orange-100 text-brand-coral flex items-center justify-center font-bold text-lg"><i className="fa-solid fa-clipboard-user" /></div><div><h3 className="font-display font-bold text-2xl text-slate-900">Pre-Register Your Kids</h3><p className="text-xs text-slate-500">Save time at Sunday check-in by filling this out now!</p></div></div>
-                <form onSubmit={(e) => submitForm(e, 'Success! Your family is pre-registered. See you Sunday!')} className="space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-3"><div><label className="block text-xs font-bold text-slate-700 mb-1">Parent First Name *</label><input type="text" required placeholder="e.g. Sarah" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-coral outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Parent Last Name *</label><input type="text" required placeholder="e.g. Miller" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-coral outline-none" /></div></div>
-                  <div className="grid sm:grid-cols-2 gap-3"><div><label className="block text-xs font-bold text-slate-700 mb-1">Mobile Phone (For Security SMS) *</label><input type="tel" required placeholder="(555) 000-0000" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-coral outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Preferred Sunday Service *</label><select required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-coral outline-none"><option value="">Select Service Time</option><option value="9am">9:00 AM Service</option><option value="11am">11:00 AM Service</option></select></div></div>
-                  <hr className="border-slate-100 my-2" />
-                  <div><h4 className="font-bold text-sm text-slate-800 mb-2 flex items-center justify-between"><span>Child Details</span><span className="text-xs font-normal text-slate-500">Add info for each child</span></h4><div className="space-y-3"><div className="p-3 bg-orange-50/50 rounded-2xl border border-orange-100 space-y-3"><div className="grid sm:grid-cols-3 gap-2"><div className="sm:col-span-2"><label className="block text-xs font-semibold text-slate-600 mb-1">Child Full Name</label><input type="text" required placeholder="e.g. Leo Miller" className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs outline-none" /></div><div><label className="block text-xs font-semibold text-slate-600 mb-1">Age / Grade</label><input type="text" required placeholder="e.g. 4 yrs" className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs outline-none" /></div></div><div><label className="block text-xs font-semibold text-slate-600 mb-1">Allergies / Special Instructions</label><input type="text" placeholder="e.g. Peanut allergy, asthma, none" className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs outline-none" /></div></div></div></div>
-                  <div className="pt-2"><button type="submit" className="w-full py-3 bg-brand-coral hover:bg-red-500 text-white font-bold rounded-xl shadow transition">Complete Pre-Registration</button></div>
-                </form>
-              </>
-            ) : modal === 'volunteer' ? (
-              <>
-                <div className="text-center mb-6"><div className="w-12 h-12 rounded-2xl bg-purple-100 text-brand-purple flex items-center justify-center font-bold text-xl mx-auto mb-2"><i className="fa-solid fa-hands-holding-child" /></div><h3 className="font-display font-bold text-2xl text-slate-900">Serve in Heartfelt Kids</h3><p className="text-xs text-slate-500 mt-1">Invest in the next generation! Fill out this quick inquiry.</p></div>
-                <form onSubmit={(e) => submitForm(e, 'Thank you! Our kids coordinator will contact you shortly.')} className="space-y-3"><div><label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label><input type="text" required placeholder="Your name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label><input type="email" required placeholder="you@example.com" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /></div><div><label className="block text-xs font-bold text-slate-700 mb-1">Preferred Age Group to Serve</label><select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none"><option>Young Believers (Grades 3-5)</option><option>Trailblazers (Grades 6-9)</option><option>Impact Crew (Grades 10-13)</option><option>Legacy Team (Grades 14-17)</option><option>Check-In Host / Greeter</option></select></div><button type="submit" className="w-full py-3 bg-brand-purple hover:bg-purple-700 text-white font-bold rounded-xl transition text-xs uppercase tracking-wider">Submit Volunteer Inquiry</button></form>
-              </>
-            ) : (
-              <>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-brand-green flex items-center justify-center font-bold text-xl mx-auto mb-2"><i className="fa-solid fa-calendar-check" /></div>
-                <h3 className="font-display font-bold text-xl text-slate-900">RSVP Event</h3>
-                <p className="text-xs text-slate-500 my-2">Let us know how many family members are coming!</p>
-                <form onSubmit={(e) => submitForm(e, 'Event RSVP saved! We can\'t wait to see you there.')} className="space-y-3 mt-4"><input type="text" required placeholder="Your Name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /><input type="number" min="1" max="10" required placeholder="Number of attendees" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" /><button type="submit" className="w-full py-2.5 bg-brand-green hover:bg-emerald-600 text-white font-bold rounded-xl transition text-xs">Confirm Attendance</button></form>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {lightbox && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4" onClick={closeLightbox}>
-          <div className="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-slate-700 relative" onClick={(e) => e.stopPropagation()}>
-            <button onClick={closeLightbox} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center font-bold"><i className="fa-solid fa-xmark" /></button>
-            <div className="relative bg-black aspect-video flex items-center justify-center overflow-hidden"><img src={lightbox.image} onError={(e) => { e.currentTarget.src = lightbox.fallback; }} alt={lightbox.title} className="w-full h-full object-contain" /></div>
-            <div className="p-6 space-y-2"><div className="flex items-center gap-2"><span className="px-3 py-1 bg-rose-100 text-rose-800 font-extrabold text-[10px] rounded-full uppercase tracking-wider">{lightbox.tag}</span><span className="text-xs text-slate-400 font-semibold">Heartfelt Kids Gallery</span></div><h3 className="font-display font-bold text-xl sm:text-2xl text-slate-900">{lightbox.title}</h3><p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{lightbox.description}</p></div>
-          </div>
-        </div>
-      )}
-
-      <div className={`fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl transform transition-all duration-300 flex items-center gap-3 border border-slate-700 text-sm ${toast.visible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-        <div className="text-brand-yellow font-bold"><i className={`fa-solid ${toast.icon}`} /></div>
-        <div className="font-medium">{toast.message}</div>
-      </div>
     </div>
   );
 }
-
-export default App;
