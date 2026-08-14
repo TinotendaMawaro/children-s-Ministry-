@@ -6,28 +6,29 @@ import {
   Volume2, VolumeX, Eye, EyeOff, HelpCircle, ChevronDown, ChevronUp, RefreshCw, CheckCircle2
 } from 'lucide-react';
 
-import revivalImg from './images/serving 3.jpg';
-import regaliaImg from './images/revival.jpg';
-import intercessionImg from './images/prayer.jpg';
+import servingImg from './images/serving 3.jpg';
+import revivalImg from './images/revival.jpg';
+import prayerImg from './images/prayer.jpg';
+import logoImg from './images/logo (1).webp';
 
 const HERO_SLIDES = [
   {
     id: 1,
-    image: revivalImg,
+    image: servingImg,
     title: "Where Faith Grows in Little Hearts",
     subtitle: "Nurturing the next generation in God's love, wisdom, and joy every Sunday in Harare.",
     badge: "Welcome to Heartfelt Kids"
   },
   {
     id: 2,
-    image: regaliaImg,
+    image: revivalImg,
     title: "Vibrant Praise & Inspired Worship",
     subtitle: "Dynamic kid-friendly worship sessions where children discover their praise and purpose.",
     badge: "Sunday Worship Experience"
   },
   {
     id: 3,
-    image: intercessionImg,
+    image: prayerImg,
     title: "Safe, Creative & Joy-Filled Spaces",
     subtitle: "Interactive Bible teaching, crafts, and games tailored for every age group.",
     badge: "Discipleship for Kids"
@@ -402,7 +403,7 @@ export default function App() {
         </div>
       )}
 
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
 
@@ -410,26 +411,21 @@ export default function App() {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex items-center gap-3 cursor-pointer group"
             >
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
-                <Heart className="w-7 h-7 text-white fill-white" />
-              </div>
+              <img src={logoImg} alt="Heartfelt Children's Ministry" className="h-10 w-auto group-hover:scale-105 transition-transform" />
               <div>
-                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 flex items-center gap-1">
-                  HEARTFELT <span className="text-red-600">KIDS</span>
-                </span>
-                <span className="block text-xs sm:text-xs font-semibold text-slate-600 tracking-wider uppercase">
-                  Harare, Zimbabwe
+                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">
+                  HEARTFELT CHILDREN'S MINISTRY
                 </span>
               </div>
             </div>
 
-            <nav className="hidden lg:flex items-center space-x-7 font-medium text-slate-700 text-sm">
-              <button onClick={() => scrollToSection('about')} className="hover:text-red-600 transition-colors">About</button>
-              <button onClick={() => scrollToSection('verse')} className="hover:text-red-600 transition-colors">Verse of the Week</button>
-              <button onClick={() => scrollToSection('schedule')} className="hover:text-red-600 transition-colors">Schedule</button>
-              <button onClick={() => scrollToSection('events')} className="hover:text-red-600 transition-colors">Events</button>
-              <button onClick={() => scrollToSection('faq')} className="hover:text-red-600 transition-colors">FAQ</button>
-              <button onClick={() => scrollToSection('volunteer')} className="hover:text-red-600 transition-colors">Volunteer</button>
+            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-7 font-medium text-slate-700 text-sm">
+              <button onClick={() => scrollToSection('about')} className="px-3 py-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition-colors text-red-600 font-semibold">About</button>
+              <button onClick={() => scrollToSection('verse')} className="px-3 py-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition-colors">Verse of the Week</button>
+              <button onClick={() => scrollToSection('schedule')} className="px-3 py-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition-colors">Schedule</button>
+              <button onClick={() => scrollToSection('events')} className="px-3 py-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition-colors">Events</button>
+              <button onClick={() => scrollToSection('faq')} className="px-3 py-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition-colors">FAQ</button>
+              <button onClick={() => scrollToSection('volunteer')} className="px-3 py-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition-colors">Volunteer</button>
               <button
                 onClick={() => scrollToSection('register')}
                 className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full font-semibold shadow-md shadow-red-600/25 hover:shadow-lg hover:shadow-red-600/35 active:scale-95 transition-all"
@@ -441,10 +437,10 @@ export default function App() {
             <div className="lg:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
+                className="p-3 rounded-xl text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors"
                 aria-label="Toggle Navigation"
               >
-                {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
 
@@ -499,7 +495,7 @@ export default function App() {
         )}
       </header>
 
-      <section className="relative bg-slate-900 text-white overflow-hidden min-h-[480px] sm:min-h-[580px] lg:min-h-[640px] flex items-center">
+      <section className="relative bg-slate-900 text-white overflow-hidden min-h-[420px] sm:min-h-[580px] lg:min-h-[640px] flex items-center">
         {HERO_SLIDES.map((slide, idx) => (
           <div
             key={slide.id}
@@ -510,7 +506,7 @@ export default function App() {
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-contain sm:object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent" />
             <div className="absolute inset-0 bg-red-950/20 mix-blend-overlay" />
@@ -1516,10 +1512,8 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 sm:pb-12 border-b border-slate-800">
 
             <div className="space-y-4 md:col-span-1">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-white fill-white" />
-                </div>
+              <div className="flex items-center gap-3">
+                <img src={logoImg} alt="Heartfelt Children's Ministry" className="h-9 w-auto" />
                 <span className="font-black text-lg tracking-tight">HEARTFELT KIDS</span>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed">
